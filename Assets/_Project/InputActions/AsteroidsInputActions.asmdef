@@ -1,0 +1,11 @@
+{
+  "name": "AsteroidsInputActions",
+  "rootNamespace": "RajkumarTest.Asteroid",
+  "references": [
+    "Unity.InputSystem"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": true
+}

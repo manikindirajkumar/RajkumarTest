@@ -1,0 +1,19 @@
+{
+  "name": "RajkumarTest.Asteroids.Core.Tests",
+  "rootNamespace": "RajkumarTest.Asteroid.Tests",
+  "references": [
+    "RajkumarTest.Asteroids.Core",
+    "UnityEngine.TestRunner",
+    "UnityEditor.TestRunner",
+    "RajkumarTest.Asteroids.Game"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ]
+}

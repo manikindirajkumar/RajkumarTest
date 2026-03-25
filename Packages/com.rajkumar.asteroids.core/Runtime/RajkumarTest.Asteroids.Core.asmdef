@@ -1,0 +1,9 @@
+{
+  "name": "RajkumarTest.Asteroids.Core",
+  "rootNamespace": "RajkumarTest.Asteroid.Core",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "autoReferenced": true
+}

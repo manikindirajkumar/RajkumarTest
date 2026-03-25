@@ -1,0 +1,13 @@
+{
+  "name": "RajkumarTest.Asteroids.Game",
+  "rootNamespace": "RajkumarTest.Asteroid",
+  "references": [
+    "RajkumarTest.Asteroids.Core",
+    "Unity.InputSystem",
+    "AsteroidsInputActions",
+    "Unity.Addressables",
+    "Unity.ResourceManager",
+    "Unity.TextMeshPro"
+  ],
+  "autoReferenced": true
+}

@@ -1,0 +1,10 @@
+{
+  "name": "com.rajkumar.asteroids.core",
+  "version": "1.0.0",
+  "displayName": "Asteroids Core",
+  "description": "Core interfaces and logic for Asteroids game",
+  "unity": "2021.3",
+  "author": {
+    "name": "Rajkumar Manikindi"
+  }
+}
