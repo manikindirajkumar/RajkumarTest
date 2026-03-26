@@ -1,17 +1,20 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using RajkumarTest.Asteroid.Core;
 
-// ← replace UnityEngine.UI
-
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
+    /// <summary>
+    /// Shows Game Over screen with final score.
+    /// Hidden during play — visible on game over.
+    /// Restart button wired in code — no Inspector wiring needed.
+    /// </summary>
     public class GameOverView : MonoBehaviour
     {
-        [SerializeField] private GameObject _panel;
-        [SerializeField] private TextMeshProUGUI _finalScoreText;  // ✅
-        [SerializeField] private Button _restartButton;
-        // removed _highScoreText — not implemented yet
+        [SerializeField] private GameObject      _panel;
+        [SerializeField] private TextMeshProUGUI _finalScoreText;
+        [SerializeField] private Button          _restartButton;
 
         private IGameManager _gameManager;
         private IScoreSystem _scoreSystem;
@@ -36,7 +39,8 @@ namespace RajkumarTest.Asteroid.Core
                 _panel.SetActive(false);
 
             if (_restartButton != null)
-                _restartButton.onClick.AddListener(OnRestartClicked);
+                _restartButton.onClick
+                    .AddListener(OnRestartClicked);
         }
 
         private void OnDestroy()
@@ -45,10 +49,11 @@ namespace RajkumarTest.Asteroid.Core
                 _gameManager.OnStateChanged -= HandleStateChanged;
 
             if (_restartButton != null)
-                _restartButton.onClick.RemoveListener(OnRestartClicked);
+                _restartButton.onClick
+                    .RemoveListener(OnRestartClicked);
         }
 
-        private void OnRestartClicked()
+        public void OnRestartClicked()
         {
             if (_panel != null)
                 _panel.SetActive(false);

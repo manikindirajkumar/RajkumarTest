@@ -2,14 +2,13 @@ using System;
 using UnityEngine;
 using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
     /// <summary>
     /// Single asteroid — moves in straight line,
     /// wraps at screen edges, destroys on bullet hit.
-    /// Uses BoundaryHandler for wrapping —
-    /// same as ship.
     /// Returns to pool via OnDestroyed event.
+    /// Uses TryGetComponent in collision — no GetComponent overhead.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public class Asteroid : MonoBehaviour, IAsteroid
@@ -21,83 +20,85 @@ namespace RajkumarTest.Asteroid.Core
         public event Action<IAsteroid, Vector3> OnDestroyed;
 
         // ── private fields ───────────────────────────────────────
-        [SerializeField]
-        private Rigidbody2D _rigidbody;
+
+        private Rigidbody2D      _rigidbody;
         private IBoundaryHandler _boundaryHandler;
-        private string _playerTag = "Player";
-        public event Action<IAsteroid> OnReturnToPool;
-        // ── initialisation ───────────────────────────────────────
-         
+
+        // ── Unity lifecycle ──────────────────────────────────────
 
         private void Awake()
         {
+            _rigidbody = GetComponent<Rigidbody2D>();
 
-            if (_rigidbody == null)
-            {
-                _rigidbody = GetComponent<Rigidbody2D>();
-            }
-            if (_rigidbody != null)
-            {
-                _rigidbody.gravityScale = 0f;    
-            }
+            Debug.Assert(_rigidbody != null,
+                $"[Asteroid] Missing Rigidbody2D " +
+                $"on {gameObject.name}");
+
+            _rigidbody.gravityScale = 0f;
         }
+
+        // ── initialisation ───────────────────────────────────────
 
         public void Initialise(
             AsteroidSize size,
             IBoundaryHandler boundaryHandler)
         {
+            if (boundaryHandler == null)
+                throw new ArgumentNullException(
+                    nameof(boundaryHandler));
+
             Size             = size;
             _boundaryHandler = boundaryHandler;
         }
 
-        // ── IAsteroid implementation ─────────────────────────────
+        // ── IAsteroid ────────────────────────────────────────────
 
         public void Activate(
             Vector3 position,
             Vector3 direction,
             float speed)
         {
-            transform.position = position;
+            transform.position    = position;
             gameObject.SetActive(true);
-
             _rigidbody.linearVelocity =
                 direction.normalized * speed;
         }
 
         public void Destroy()
         {
-            Vector3 position = transform.position; // capture before deactivate
+            // Capture position before deactivating
+            Vector3 position = transform.position;
+
             _rigidbody.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
+
+            // Pass position so spawner knows where to split
             OnDestroyed?.Invoke(this, position);
+        }
+
+        public event Action<IAsteroid> OnReturnToPool;
+
+        public void DeactivateSilently()
+        {
+            _rigidbody.linearVelocity = Vector2.zero;
+            gameObject.SetActive(false);
+            // No event — used for pool init and ClearAll
         }
 
         // ── Unity lifecycle ──────────────────────────────────────
 
         private void Update()
         {
-            if (!IsActive || _boundaryHandler == null)
-                return;
+            if (!IsActive || _boundaryHandler == null) return;
 
-            // Wrap position — same as ship
             transform.position = _boundaryHandler
                 .HandleBoundary(transform.position);
         }
-        /// <summary>
-        /// Deactivate without firing OnDestroyed.
-        /// Used during pool initialisation only.
-        /// </summary>
-        public void DeactivateSilently()
-        {
-            if (_rigidbody != null)
-                _rigidbody.linearVelocity = Vector2.zero;
 
-            gameObject.SetActive(false);
-        }
         private void OnTriggerEnter2D(Collider2D other)
         {
+            // TryGetComponent — faster than GetComponent
             if (!other.TryGetComponent(out IBullet bullet)) return;
-            if (bullet == null) return;
 
             bullet.Deactivate();
             Destroy();

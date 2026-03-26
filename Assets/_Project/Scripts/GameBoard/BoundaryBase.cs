@@ -1,12 +1,14 @@
 using UnityEngine;
+using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
     /// <summary>
-    /// Base class providing shared boundary
-    /// calculation logic only.
-    /// Never instantiated directly —
-    /// use BoundaryHandler or BoundaryDestroyer.
+    /// Abstract base class providing shared boundary
+    /// calculation logic for BoundaryHandler and BoundaryDestroyer.
+    /// Never instantiated directly.
+    /// Avoids code duplication while respecting LSP —
+    /// base class makes no promises about HandleBoundary behaviour.
     /// </summary>
     public abstract class BoundaryBase : IBoundaryHandler
     {
@@ -21,7 +23,15 @@ namespace RajkumarTest.Asteroid.Core
             Boundaries = boundaries;
         }
 
-        // Shared by both subclasses — no duplication
+        // ── IBoundaryHandler ─────────────────────────────────────
+
+        public abstract bool ShouldDeactivateAtBoundary { get; }
+
+        public abstract Vector3 HandleBoundary(Vector3 position);
+
+        /// <summary>
+        /// Shared by both subclasses — no duplication.
+        /// </summary>
         public bool IsOutOfBounds(Vector3 position)
         {
             return position.x > Boundaries.MaxX ||
@@ -29,9 +39,5 @@ namespace RajkumarTest.Asteroid.Core
                    position.y > Boundaries.MaxY ||
                    position.y < Boundaries.MinY;
         }
-
-        // Each subclass defines its own behaviour
-        public abstract bool ShouldDeactivateAtBoundary { get; }
-        public abstract Vector3 HandleBoundary(Vector3 position);
     }
 }

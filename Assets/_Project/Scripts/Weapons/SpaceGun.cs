@@ -1,20 +1,16 @@
 using UnityEngine;
+using VContainer;
 using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid
 {
     /// <summary>
     /// Ship weapon system.
-    /// Gets bullets from pool, launches them,
-    /// enforces fire rate cooldown.
-    ///
-    /// Listens to IInputProvider.OnShoot —
-    /// does not read input directly.
+    /// Dependencies injected by VContainer via [Inject].
+    /// Handles fire rate cooldown and bullet launching.
     /// </summary>
     public class SpaceGun : MonoBehaviour, ISpaceGun
     {
-        // ── config ───────────────────────────────────────────────
-
         [SerializeField]
         [Tooltip("Seconds between each shot")]
         private float _fireRate = 0.3f;
@@ -23,74 +19,82 @@ namespace RajkumarTest.Asteroid
         [Tooltip("Where bullet spawns — tip of ship")]
         private Transform _muzzlePoint;
 
-        // ── ISpaceGun ────────────────────────────────────────────
-
         public bool CanFire => _cooldownTimer <= 0f;
 
-        // ── private fields ───────────────────────────────────────
-
         private IObjectPool<IBullet> _bulletPool;
-        private IInputProvider _inputProvider;
-        private float _cooldownTimer;
-        private bool _isActive = true;
+        private IInputProvider       _inputProvider;
+        private IGameManager         _gameManager;
+        private PoolManager _poolManager;
+        private float                _cooldownTimer;
+        private bool                 _isActive = true;
 
-        // ── initialisation ───────────────────────────────────────
+        // ── VContainer injection ─────────────────────────────────
 
-        public void Initialise(
-            IObjectPool<IBullet> bulletPool,
-            IInputProvider inputProvider)
+        [Inject]
+        public void Construct(
+            PoolManager poolManager,      // ← registered in VContainer ✅
+            IInputProvider inputProvider,
+            IGameManager gameManager)
         {
-            if (bulletPool == null)
-                throw new System.ArgumentNullException(
-                    nameof(bulletPool));
-
-            if (inputProvider == null)
-                throw new System.ArgumentNullException(
-                    nameof(inputProvider));
-
-            _bulletPool    = bulletPool;
+            // Get pool from PoolManager after it's initialised
+            _poolManager   = poolManager;
             _inputProvider = inputProvider;
-
-            // Subscribe to shoot event
             _inputProvider.OnShoot += HandleShoot;
+            gameManager.OnStateChanged += HandleStateChanged;
         }
 
         private void OnDestroy()
         {
             if (_inputProvider != null)
                 _inputProvider.OnShoot -= HandleShoot;
+            
+            if (_gameManager != null)
+                _gameManager.OnStateChanged -= HandleStateChanged;
         }
 
-        // ── ISpaceGun implementation ─────────────────────────────
+        // ── ISpaceGun ────────────────────────────────────────────
 
         public void TryFire(Vector3 position, Vector3 direction)
         {
-            if (!CanFire) return;
+            if (!CanFire || !_isActive) return;
 
-            IBullet bullet = _bulletPool.Get();
+            // Access via PoolManager — always available ✅
+            IBullet bullet = _poolManager.BulletPool?.Get();
+            if (bullet == null) return;
+
             bullet.Launch(position, direction);
-
-            // Start cooldown
             _cooldownTimer = _fireRate;
         }
+
         public void SetActive(bool active)
         {
             _isActive = active;
         }
+
         // ── Unity lifecycle ──────────────────────────────────────
 
         private void Update()
         {
-            // Count down cooldown timer
             if (_cooldownTimer > 0f)
                 _cooldownTimer -= Time.deltaTime;
         }
 
-        // ── private handlers ─────────────────────────────────────
+        // ── private ──────────────────────────────────────────────
+
         private void HandleShoot()
         {
-            if (!_isActive) return;
-            TryFire(_muzzlePoint.position, _muzzlePoint.up);
+            if (_muzzlePoint == null) return;
+
+            // Get pool lazily — guaranteed initialised by this point
+            TryFire(
+                _muzzlePoint.position,
+                _muzzlePoint.up);
         }
+        private void HandleStateChanged(GameState state)
+        {
+            // React to state — no one needs to tell us
+            _isActive = state == GameState.Playing;
+        }
+
     }
 }

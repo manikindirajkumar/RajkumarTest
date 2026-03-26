@@ -119,52 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &272647699
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 272647701}
-  - component: {fileID: 272647700}
-  m_Layer: 0
-  m_Name: ReSpawnSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &272647700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272647699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f42ef6a27b0b4accb5cc4ef624c0080, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: RajkumarTest.Asteroids.Game::RajkumarTest.Asteroid.RespawnSystem
-  _invincibilityDuration: 3
-  _flashInterval: 0.2
---- !u!4 &272647701
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272647699}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18032, y: 0.79384, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &344333292
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,7 +236,7 @@ GameObject:
   - component: {fileID: 711787438}
   - component: {fileID: 711787437}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: GameCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -656,6 +610,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841450604}
   m_CullTransparentMesh: 1
+--- !u!1 &1058049982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1058049984}
+  - component: {fileID: 1058049983}
+  m_Layer: 0
+  m_Name: GameBootStrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1058049983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058049982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07147b1afbfe468683624d6b2338c6d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RajkumarTest.Asteroids.Game::RajkumarTest.Asteroid.GameLifetimeScope
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects: []
+  _gameCamera: {fileID: 711787438}
+  _keyboardInput: {fileID: 1706275669}
+  _waveConfig: {fileID: 11400000, guid: 66b8ca394ca70421d834a57b5d6c11d1, type: 2}
+  _hudView: {fileID: 1104283704}
+  _gameOverView: {fileID: 1986860779}
+  _bulletPoolSize: 10
+  _largePoolSize: 12
+  _mediumPoolSize: 24
+  _smallPoolSize: 48
+--- !u!4 &1058049984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058049982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1104283703
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,7 +939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1379531598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -943,13 +954,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RajkumarTest.Asteroid.GameInstaller
   _keyboardInput: {fileID: 1706275669}
   _waveConfig: {fileID: 11400000, guid: 66b8ca394ca70421d834a57b5d6c11d1, type: 2}
-  _shipMovement: {fileID: 1662549546}
-  _spaceGun: {fileID: 1662549547}
+  _shipMovement: {fileID: 0}
+  _spaceGun: {fileID: 0}
   _bulletPoolSize: 10
   _asteroidPoolSize: 10
   _hudView: {fileID: 1104283704}
   _gameOverView: {fileID: 1986860779}
-  _respawnSystem: {fileID: 272647700}
+  _respawnSystem: {fileID: 0}
 --- !u!4 &1379531599
 Transform:
   m_ObjectHideFlags: 0
@@ -1102,85 +1113,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1555228645}
   m_CullTransparentMesh: 1
---- !u!1001 &1662549545
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.21269
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.1349
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 194603779668933984, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1932602170155076219, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-      propertyPath: m_Name
-      value: Spaceship
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
---- !u!114 &1662549546 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7423740550398738093, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-  m_PrefabInstance: {fileID: 1662549545}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 290a5d1858f14fb6b2232091431eccf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RajkumarTest.Asteroid.ShipMovement
---- !u!114 &1662549547 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 145245615140926141, guid: c5b908db0524243039371310fd0ec2f6, type: 3}
-  m_PrefabInstance: {fileID: 1662549545}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e2da1cb5f224184b24cdaac6a6ae740, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: RajkumarTest.Asteroids.Game::RajkumarTest.Asteroid.SpaceGun
 --- !u!1 &1681728412
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,5 +1897,4 @@ SceneRoots:
   - {fileID: 1873001823}
   - {fileID: 344333296}
   - {fileID: 1104283705}
-  - {fileID: 272647701}
-  - {fileID: 1662549545}
+  - {fileID: 1058049984}

@@ -1,23 +1,27 @@
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
     /// <summary>
     /// Manages creation and lifecycle of all object pools.
-    /// Pure C# class — no MonoBehaviour dependency.
-    /// Call InitialiseAsync() after boundaries are ready.
+    /// Pure C# — no MonoBehaviour dependency.
+    /// Synchronous — prefabs pre-cached in LoadingScene
+    /// so WaitForCompletion() is instant.
+    /// Call Initialise() after VContainer builds.
     /// Call Dispose() on game shutdown.
     /// </summary>
     public class PoolManager
     {
-        // ── public accessors — read only ─────────────────────────
+        // ── public accessors ─────────────────────────────────────
 
-        public IObjectPool<IBullet>   BulletPool          => _bulletPool;
-        public IObjectPool<IAsteroid> LargeAsteroidPool   => _largeAsteroidPool;
-        public IObjectPool<IAsteroid> MediumAsteroidPool  => _mediumAsteroidPool;
-        public IObjectPool<IAsteroid> SmallAsteroidPool   => _smallAsteroidPool;
+        public IObjectPool<IBullet>   BulletPool         => _bulletPool;
+        public IObjectPool<IAsteroid> LargeAsteroidPool  => _largeAsteroidPool;
+        public IObjectPool<IAsteroid> MediumAsteroidPool => _mediumAsteroidPool;
+        public IObjectPool<IAsteroid> SmallAsteroidPool  => _smallAsteroidPool;
 
         // ── private fields ───────────────────────────────────────
 
@@ -26,154 +30,124 @@ namespace RajkumarTest.Asteroid.Core
         private ObjectPool<IAsteroid> _mediumAsteroidPool;
         private ObjectPool<IAsteroid> _smallAsteroidPool;
 
-        private IBoundaryHandler _boundaryHandler;
-        private IBoundaryHandler _bulletBoundaryHandler;
-        private readonly IAssetLoader<GameObject> _assetLoader;
-        private readonly int _bulletPoolSize;
-        private readonly int _asteroidPoolSize;
+        private IBoundaryHandler        _boundaryHandler;
+        private IBulletBoundaryHandler  _bulletBoundaryHandler;
+        private readonly Preloader     _preloader;
+        private readonly IScoreSystem  _scoreSystem;
+        private readonly IWaveConfig   _waveConfig;
 
         // ── constructor ──────────────────────────────────────────
 
-        private readonly IScoreSystem _scoreSystem;
-        private readonly IWaveConfig  _waveConfig;
-
         public PoolManager(
-            IAssetLoader<GameObject> assetLoader,
+            Preloader     preloader, 
             IScoreSystem scoreSystem,
-            IWaveConfig waveConfig,
-            int bulletPoolSize   = 10,
-            int asteroidPoolSize = 10)
+            IWaveConfig  waveConfig)
         {
-            _assetLoader      = assetLoader;
-            _scoreSystem      = scoreSystem;
-            _waveConfig       = waveConfig;
-            _bulletPoolSize   = bulletPoolSize;
-            _asteroidPoolSize = asteroidPoolSize;
+            if (scoreSystem == null)
+                throw new ArgumentNullException(nameof(scoreSystem));
+            if (waveConfig  == null)
+                throw new ArgumentNullException(nameof(waveConfig));
+
+            _scoreSystem    = scoreSystem;
+            _waveConfig     = waveConfig;
+            _preloader      = preloader;
         }
 
         // ── public methods ───────────────────────────────────────
 
         /// <summary>
-        /// Initialise all pools.
-        /// Must be called AFTER boundaries are created.
-        /// Must be awaited before using any pool.
+        /// Initialise all pools synchronously.
+        /// Prefabs must be cached in Addressables
+        /// before calling — use LoadingScene for this.
         /// </summary>
-        public async Task InitialiseAsync(
-            IBoundaryHandler boundaryHandler,
-            IBoundaryHandler bulletBoundaryHandler)
+        public void Initialise(
+            IBoundaryHandler       boundaryHandler,
+            IBulletBoundaryHandler bulletBoundaryHandler)
         {
-            if (boundaryHandler == null)
-                throw new System.ArgumentNullException(
-                    nameof(boundaryHandler));
-
-            if (bulletBoundaryHandler == null)
-                throw new System.ArgumentNullException(
-                    nameof(bulletBoundaryHandler));
 
             _boundaryHandler       = boundaryHandler;
             _bulletBoundaryHandler = bulletBoundaryHandler;
 
-            await SetupBulletPoolAsync();
-            await SetupAsteroidPoolsAsync();
+            SetupBulletPool();
+            SetupAsteroidPools();
         }
 
-        /// <summary>
-        /// Release all pool resources.
-        /// Call from GameInstaller.OnDestroy().
-        /// </summary>
         public void Dispose()
         {
-            _bulletPool?.Release();
-            _largeAsteroidPool?.Release();
-            _mediumAsteroidPool?.Release();
-            _smallAsteroidPool?.Release();
+            _bulletPool?.Dispose();
+            _largeAsteroidPool?.Dispose();
+            _mediumAsteroidPool?.Dispose();
+            _smallAsteroidPool?.Dispose();
         }
 
         // ── private setup ────────────────────────────────────────
 
-        private async Task SetupBulletPoolAsync()
+        private void SetupBulletPool()
         {
-            Transform parent = CreatePoolParent("[Pool] Bullets");
+            ObjectPool<IBullet> localPool = null;
 
-            _bulletPool = new ObjectPool<IBullet>(
-                address:      AddressableKeys.Prefabs.Bullet1,
-                initialSize:  _bulletPoolSize,
-                parent:       parent,
-                assetLoader:  _assetLoader,
-                getComponent: go => go.GetComponent<IBullet>(),
-                onCreated:    bullet =>
+            localPool = new ObjectPool<IBullet>(
+                _preloader.BulletPoolParent,  // ← Transform, not prefab
+                bullet =>
                 {
                     if (bullet is Bullet b)
                         b.Initialise(_bulletBoundaryHandler);
 
-                    bullet.OnDeactivated += _bulletPool.Return;
+                    bullet.OnDeactivated +=
+                        _ => localPool?.Return(bullet);
+
                     (bullet as Bullet)?.DeactivateSilently();
                 });
 
-            await _bulletPool.InitialiseAsync();
+            _bulletPool = localPool;
         }
 
-        private async Task SetupAsteroidPoolsAsync()
-        {
-            Transform parent =
-                CreatePoolParent("[Pool] Asteroids");
-
-            _largeAsteroidPool  = CreateAsteroidPool(
-                AddressableKeys.Prefabs.LargeAsteroid,
-                AsteroidSize.Large,
-                10,
-                parent);
-
-            _mediumAsteroidPool = CreateAsteroidPool(
-                AddressableKeys.Prefabs.MediumAsteroid,
-                AsteroidSize.Medium,
-                20,
-                parent);
-
-            _smallAsteroidPool  = CreateAsteroidPool(
-                AddressableKeys.Prefabs.SmallAsteroid,
-                AsteroidSize.Small,
-                40,
-                parent);
-
-            await _largeAsteroidPool.InitialiseAsync();
-            await _mediumAsteroidPool.InitialiseAsync();
-            await _smallAsteroidPool.InitialiseAsync();
-        }
-
-        private ObjectPool<IAsteroid> CreateAsteroidPool(
-            string address,
+        private void SetupAsteroidPool(
+            Transform parent,
             AsteroidSize size,
-            int pooledObjectCount,
-            Transform parent)
+            out ObjectPool<IAsteroid> pool)
         {
-            ObjectPool<IAsteroid> pool = null;
+            ObjectPool<IAsteroid> localPool = null;
 
-            pool = new ObjectPool<IAsteroid>(
-                address: address,
-                initialSize: _asteroidPoolSize,
-                parent: parent,
-                assetLoader: _assetLoader,
-                getComponent: go => go.GetComponent<IAsteroid>(),
-                onCreated: asteroid =>
+            localPool = new ObjectPool<IAsteroid>(
+                parent,                       // ← Transform, not prefab
+                asteroid =>
                 {
                     if (asteroid is Asteroid a)
-                        a.Initialise(size, _boundaryHandler); // ← simplified
+                        a.Initialise(size, _boundaryHandler);
 
-                    // Score via observer pattern
                     asteroid.OnDestroyed += (destroyed, pos) =>
                         _scoreSystem.AddScore(
-                            _waveConfig.GetScoreForSize(destroyed.Size));
+                            _waveConfig.GetScoreForSize(
+                                destroyed.Size));
 
-                    asteroid.OnDestroyed += (destroyed, pos) => pool?.Return(destroyed);
-                    asteroid.OnReturnToPool += item        => pool?.Return(item);
+                    asteroid.OnDestroyed +=
+                        (destroyed, pos) =>
+                            localPool?.Return(destroyed);
 
-                     
                     (asteroid as Asteroid)?.DeactivateSilently();
                 });
 
-            return pool;
+            pool = localPool;
         }
+
+    private void SetupAsteroidPools()
+    {
+        SetupAsteroidPool(
+            _preloader.LargeAsteroidParent,   // ← direct ✅
+            AsteroidSize.Large,
+            out _largeAsteroidPool);
+
+        SetupAsteroidPool(
+            _preloader.MediumAsteroidParent,  // ← direct ✅
+            AsteroidSize.Medium,
+            out _mediumAsteroidPool);
+
+        SetupAsteroidPool(
+            _preloader.SmallAsteroidParent,   // ← direct ✅
+            AsteroidSize.Small,
+            out _smallAsteroidPool);
+    }
 
         private Transform CreatePoolParent(string name)
         {

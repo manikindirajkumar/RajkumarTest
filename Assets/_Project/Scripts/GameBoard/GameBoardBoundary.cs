@@ -1,14 +1,14 @@
+using System;
 using UnityEngine;
+using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
     /// <summary>
-    /// Calculates and stores world-space screen boundaries
-    /// based on the main camera's viewport.
-    /// Used for screen wrapping and asteroid spawn positioning.
-    /// 
-    /// Important: Initialise this after the camera is ready —
-    /// call Initialise() from a MonoBehaviour's Start(), not Awake().
+    /// Calculates world-space screen boundaries
+    /// from the main camera viewport.
+    /// Camera injected via VContainer — no Camera.main needed.
+    /// Calculated once in constructor — immutable after creation.
     /// </summary>
     public class GameBoardBoundary : IBoundaries
     {
@@ -18,27 +18,27 @@ namespace RajkumarTest.Asteroid.Core
         public float MaxY { get; private set; }
 
         /// <summary>
-        /// Calculate world-space boundaries from the main camera viewport.
-        /// Must be called after the camera is initialised.
+        /// Camera injected by VContainer.
+        /// Boundaries calculated immediately in constructor.
         /// </summary>
-        /// <param name="camera">The camera to calculate boundaries from</param>
-        public void Initialise(Camera camera)
+        public GameBoardBoundary(Camera camera)
         {
-            if (camera == null)
-            {
-                Debug.LogError("[GameBoardBoundary] Camera is null. " +
-                               "Cannot calculate boundaries.");
-                return;
-            }
+            Calculate(camera);
+        }
 
-            // Calculate once and reuse — avoids redundant ScreenToWorldPoint calls
+        private void Calculate(Camera camera)
+        {
+            // Viewport coordinates are always 0-1
+            // regardless of screen resolution or aspect ratio
+            // Bottom-left = (0,0,0), Top-right = (1,1,0)
+
             float depth = -camera.transform.position.z;
 
-            Vector3 bottomLeft = camera.ScreenToWorldPoint(
+            Vector3 bottomLeft = camera.ViewportToWorldPoint(
                 new Vector3(0, 0, depth));
 
-            Vector3 topRight = camera.ScreenToWorldPoint(
-                new Vector3(Screen.width, Screen.height, depth));
+            Vector3 topRight = camera.ViewportToWorldPoint(
+                new Vector3(1, 1, depth));
 
             MinX = bottomLeft.x;
             MinY = bottomLeft.y;

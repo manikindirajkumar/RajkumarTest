@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1078779026650303757}
   - component: {fileID: 7423740550398738093}
   - component: {fileID: 6099868233377692488}
+  - component: {fileID: -6795957629552345705}
   m_Layer: 6
   m_Name: Spaceship
   m_TagString: Untagged
@@ -34,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 690031542354670077}
+  - {fileID: 2779359784615532705}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5909563217262889350
@@ -173,6 +175,67 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.415
+--- !u!114 &-6795957629552345705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932602170155076219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d5ebe640ec04bdfb7d43a07406c60b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RajkumarTest.Asteroids.Game::RajkumarTest.Asteroid.PlayerComponents
+  _spaceGun: {fileID: 145245615140926141}
+--- !u!1 &5337782880640545411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2779359784615532705}
+  - component: {fileID: 5705872554257014295}
+  m_Layer: 0
+  m_Name: ReSpawnSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2779359784615532705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5337782880640545411}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -91942.8, y: 45500.348, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 194603779668933984}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5705872554257014295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5337782880640545411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f42ef6a27b0b4accb5cc4ef624c0080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RajkumarTest.Asteroids.Game::RajkumarTest.Asteroid.RespawnSystem
+  _invincibilityDuration: 3
+  _flashInterval: 0.2
+  _spriteRenderer: {fileID: 5909563217262889350}
+  _shipMovement: {fileID: 7423740550398738093}
 --- !u!1 &7793014699488298297
 GameObject:
   m_ObjectHideFlags: 0

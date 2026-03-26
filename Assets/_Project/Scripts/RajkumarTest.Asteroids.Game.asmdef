@@ -7,7 +7,9 @@
     "AsteroidsInputActions",
     "Unity.Addressables",
     "Unity.ResourceManager",
-    "Unity.TextMeshPro"
+    "Unity.TextMeshPro",
+    "VContainer",
+    "VContainer.Unity"
   ],
   "autoReferenced": true
 }

@@ -1,12 +1,15 @@
+using TMPro;
 using UnityEngine;
 using RajkumarTest.Asteroid.Core;
-using TMPro;
+
 namespace RajkumarTest.Asteroid
 {
     /// <summary>
     /// Displays score, lives and wave number.
     /// Subscribes to system events —
     /// updates only when values change.
+    /// Uses OnWaveStarted — not OnWaveCompleted —
+    /// so display updates when new wave begins.
     /// </summary>
     public class HUDView : MonoBehaviour
     {
@@ -16,27 +19,36 @@ namespace RajkumarTest.Asteroid
 
         private IScoreSystem  _scoreSystem;
         private IHealthSystem _healthSystem;
-        private IWaveManager  _waveManager;
+        private IAsteroidManager  _asteriodManager;
 
         public void Initialise(
-            IScoreSystem scoreSystem,
+            IScoreSystem  scoreSystem,
             IHealthSystem healthSystem,
-            IWaveManager waveManager)
+            IAsteroidManager  asteriodManager)
         {
+            if (scoreSystem  == null)
+                throw new System.ArgumentNullException(
+                    nameof(scoreSystem));
+            if (healthSystem == null)
+                throw new System.ArgumentNullException(
+                    nameof(healthSystem));
+            if (asteriodManager  == null)
+                throw new System.ArgumentNullException(
+                    nameof(asteriodManager));
+
             _scoreSystem  = scoreSystem;
             _healthSystem = healthSystem;
-            _waveManager  = waveManager;
+            _asteriodManager  = asteriodManager;
 
             // Subscribe to events
             _scoreSystem.OnScoreChanged   += UpdateScore;
             _healthSystem.OnLivesChanged  += UpdateLives;
-            _waveManager.OnWaveCompleted += UpdateWave;
-            _waveManager.OnWaveStarted += UpdateWave;    
+            _asteriodManager.OnWaveStarted    += UpdateAsteriod;
 
-            // Set initial values
+            // Set initial values after StartGame() is called
             UpdateScore(_scoreSystem.CurrentScore);
             UpdateLives(_healthSystem.CurrentLives);
-            UpdateWave(_waveManager.CurrentWave);
+            UpdateAsteriod(_asteriodManager.CurrentWave);
         }
 
         private void OnDestroy()
@@ -45,11 +57,8 @@ namespace RajkumarTest.Asteroid
                 _scoreSystem.OnScoreChanged  -= UpdateScore;
             if (_healthSystem != null)
                 _healthSystem.OnLivesChanged -= UpdateLives;
-            if (_waveManager != null)
-            {
-                _waveManager.OnWaveCompleted -= UpdateWave;
-                _waveManager.OnWaveStarted -= UpdateWave;    
-            }
+            if (_asteriodManager  != null)
+                _asteriodManager.OnWaveStarted   -= UpdateAsteriod;
         }
 
         private void UpdateScore(int score)
@@ -64,7 +73,7 @@ namespace RajkumarTest.Asteroid
                 _livesText.text = $"LIVES: {lives}";
         }
 
-        private void UpdateWave(int wave)
+        private void UpdateAsteriod(int wave)
         {
             if (_waveText != null)
                 _waveText.text = $"WAVE: {wave}";

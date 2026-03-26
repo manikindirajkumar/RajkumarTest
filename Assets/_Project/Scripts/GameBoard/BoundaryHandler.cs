@@ -1,17 +1,12 @@
 using UnityEngine;
+using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
-    /// <summary>
-    /// Concrete implementation of IBoundaryHandler.
-    /// Wraps world positions to opposite screen edge
-    /// when they go out of bounds.
-    /// Pure C# — no MonoBehaviour dependency.
-    /// Used by ship, bullets, and asteroids.
-    /// </summary>
     /// <summary>
     /// Wraps position to opposite screen edge.
     /// Used by ship and asteroids.
+    /// Extends BoundaryBase — shares IsOutOfBounds logic.
     /// </summary>
     public class BoundaryHandler : BoundaryBase
     {
@@ -25,13 +20,13 @@ namespace RajkumarTest.Asteroid.Core
             float x = position.x;
             float y = position.y;
 
-            if (x > Boundaries.MaxX)      x = Boundaries.MinX;
-            else if (x < Boundaries.MinX) x = Boundaries.MaxX;
-            if (y > Boundaries.MaxY)      y = Boundaries.MinY;
-            else if (y < Boundaries.MinY) y = Boundaries.MaxY;
+            if (x > Boundaries.MaxX)       x = Boundaries.MinX;
+            else if (x < Boundaries.MinX)  x = Boundaries.MaxX;
+
+            if (y > Boundaries.MaxY)       y = Boundaries.MinY;
+            else if (y < Boundaries.MinY)  y = Boundaries.MaxY;
 
             return new Vector3(x, y, position.z);
         }
     }
-
 }

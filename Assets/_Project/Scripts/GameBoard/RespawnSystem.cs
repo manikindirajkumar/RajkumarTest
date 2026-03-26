@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
+using VContainer;
 using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid
@@ -8,7 +8,8 @@ namespace RajkumarTest.Asteroid
     /// <summary>
     /// Handles ship respawn after losing a life.
     /// Ship briefly flashes and is invincible during respawn.
-    /// Attached to Player GameObject.
+    /// SpriteRenderer serialized in prefab Inspector.
+    /// IHealthSystem injected by VContainer.
     /// </summary>
     public class RespawnSystem : MonoBehaviour
     {
@@ -20,26 +21,27 @@ namespace RajkumarTest.Asteroid
         [Tooltip("How fast ship flashes during invincibility")]
         private float _flashInterval = 0.2f;
 
-        private IHealthSystem _healthSystem;
-        private ShipMovement  _shipMovement;
+        [SerializeField]
         private SpriteRenderer _spriteRenderer;
-        private bool _isInvincible;
 
-        public void Initialise(
-            IHealthSystem healthSystem,
-            ShipMovement shipMovement, SpriteRenderer spriteRenderer)
+        [SerializeField]
+        private ShipMovement _shipMovement;
+
+        private IHealthSystem _healthSystem;
+
+        // ── VContainer injection ─────────────────────────────────
+
+        [Inject]
+        public void Construct(IHealthSystem healthSystem)
         {
-            if (healthSystem == null)
-                throw new System.ArgumentNullException(
-                    nameof(healthSystem));  
-            if(spriteRenderer == null)
-                throw new System.ArgumentNullException(
-                    nameof(spriteRenderer));
-            
-            _healthSystem   = healthSystem;
-            _shipMovement   = shipMovement;
-            _spriteRenderer = spriteRenderer;
+            if (_shipMovement == null)
+            {
+                Debug.LogError("[RespawnSystem] " +
+                               "_shipMovement not assigned in prefab Inspector.");
+                return;
+            }
 
+            _healthSystem = healthSystem;
             _healthSystem.OnLivesChanged += HandleLivesChanged;
         }
 
@@ -49,34 +51,33 @@ namespace RajkumarTest.Asteroid
                 _healthSystem.OnLivesChanged -= HandleLivesChanged;
         }
 
+        // ── private ──────────────────────────────────────────────
+
         private void HandleLivesChanged(int lives)
         {
-            // Only respawn if still alive
             if (lives > 0)
+            {
                 StartCoroutine(RespawnRoutine());
+            }
+            else
+            {
+                RemoveSpaceShipFromView();
+            }
         }
 
         private IEnumerator RespawnRoutine()
         {
-            // Disable ship briefly
-            _shipMovement.SetActive(false);
-
+            RemoveSpaceShipFromView();
             yield return new WaitForSeconds(1f);
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            _shipMovement?.SetActive(true);
 
-            // Reset position to center
-            _shipMovement.transform.position = Vector3.zero;
-            _shipMovement.transform.rotation = Quaternion.identity;
-            _shipMovement.SetActive(true);
-
-            // Flash for invincibility duration
             yield return StartCoroutine(FlashRoutine());
         }
 
         private IEnumerator FlashRoutine()
         {
-            _isInvincible = true;
-            _shipMovement.SetInvincible(true);
-
             float elapsed = 0f;
             while (elapsed < _invincibilityDuration)
             {
@@ -88,12 +89,18 @@ namespace RajkumarTest.Asteroid
                 elapsed += _flashInterval;
             }
 
-            // Ensure visible at end
             if (_spriteRenderer != null)
                 _spriteRenderer.enabled = true;
 
-            _isInvincible = false;
-            _shipMovement.SetInvincible(false);
+            _shipMovement?.SetInvincible(false);
+        }
+
+        private void RemoveSpaceShipFromView()
+        {
+            _shipMovement?.SetActive(false);
+            _shipMovement?.StopPhysics();
+            _shipMovement?.SetInvincible(true);
+            _spriteRenderer.enabled = false;
         }
     }
 }

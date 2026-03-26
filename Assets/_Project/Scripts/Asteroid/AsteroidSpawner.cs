@@ -2,9 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
+    /// <summary>
+    /// Spawns asteroids each wave and tracks active count.
+    /// Plain C# — no MonoBehaviour needed.
+    /// Fires OnAsteroidDestroyed event so WaveManager
+    /// can check wave completion without circular dependency.
+    /// </summary>
     public class AsteroidSpawner : IAsteroidSpawner
     {
         // ── IAsteroidSpawner ─────────────────────────────────────
@@ -15,13 +22,15 @@ namespace RajkumarTest.Asteroid.Core
         // ── private fields ───────────────────────────────────────
 
         private int _currentWaveNumber;
+        private Action<IAsteroid> _returnToPool;
+
         private readonly List<IAsteroid> _activeAsteroids
             = new List<IAsteroid>();
 
         private readonly Dictionary<AsteroidSize,
             IObjectPool<IAsteroid>> _pools;
 
-        private readonly ISpawnPositionProvider _spawnProvider;
+        private readonly IEdgeSpawnPositionProvider _spawnProvider;
         private readonly IBoundaries            _boundaries;
         private readonly IWaveConfig            _waveConfig;
 
@@ -31,9 +40,9 @@ namespace RajkumarTest.Asteroid.Core
             IObjectPool<IAsteroid> largePool,
             IObjectPool<IAsteroid> mediumPool,
             IObjectPool<IAsteroid> smallPool,
-            ISpawnPositionProvider spawnProvider,
-            IBoundaries boundaries,
-            IWaveConfig waveConfig)
+            IEdgeSpawnPositionProvider spawnProvider,
+            IBoundaries            boundaries,
+            IWaveConfig            waveConfig)
         {
             if (largePool     == null)
                 throw new ArgumentNullException(nameof(largePool));
@@ -85,6 +94,7 @@ namespace RajkumarTest.Asteroid.Core
             Vector3 position,
             int waveNumber)
         {
+            // Small asteroids don't split
             if (size == AsteroidSize.Small) return;
 
             AsteroidSize splitSize = size == AsteroidSize.Large
@@ -101,12 +111,28 @@ namespace RajkumarTest.Asteroid.Core
 
             foreach (var asteroid in toDestroy)
             {
+                // Unsubscribe first — no scoring or wave check
                 asteroid.OnDestroyed -= HandleAsteroidDestroyed;
+
+                // Silent deactivate — no events
                 asteroid.DeactivateSilently();
+
+                // Manually return to pool
+                _returnToPool?.Invoke(asteroid);
             }
 
             _activeAsteroids.Clear();
             ActiveAsteroidCount = 0;
+        }
+
+        /// <summary>
+        /// Set callback for manually returning asteroids to pool.
+        /// Called by GameInstaller/GameBootstrapper after pools ready.
+        /// </summary>
+        public void SetReturnCallback(
+            Action<IAsteroid> returnCallback)
+        {
+            _returnToPool = returnCallback;
         }
 
         // ── private ──────────────────────────────────────────────
@@ -124,9 +150,11 @@ namespace RajkumarTest.Asteroid.Core
                 return;
             }
 
+            // Wave spawns aim toward center
+            // Splits move in random direction
             Vector3 direction = size == AsteroidSize.Large
-                ? GetDirectionTowardCenter(position) // wave spawn
-                : GetRandomDirection();              // split spawn
+                ? GetDirectionTowardCenter(position)
+                : GetRandomDirection();
 
             float speed = Random.Range(
                 _waveConfig.MinSpeed,
@@ -147,11 +175,13 @@ namespace RajkumarTest.Asteroid.Core
             _activeAsteroids.Remove(asteroid);
             ActiveAsteroidCount--;
 
+            // Split before notifying wave manager
             SpawnSplit(
                 asteroid.Size,
                 position,
                 _currentWaveNumber);
 
+            // Notify WaveManager via event
             OnAsteroidDestroyed?.Invoke();
         }
 

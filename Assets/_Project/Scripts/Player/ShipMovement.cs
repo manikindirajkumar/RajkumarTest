@@ -1,27 +1,17 @@
-using System;
 using UnityEngine;
+using VContainer;
 using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid
 {
     /// <summary>
     /// Controls spaceship movement based on input state.
-    ///
-    /// Responsibilities:
-    ///   - Rotate ship based on TurnDirection from InputManager
-    ///   - Apply thrust force when IsThrusting is true
-    ///   - Wrap position via IBoundaryHandler
-    ///
-    /// Does NOT:
-    ///   - Read keyboard input directly (KeyboardInputProvider does that)
-    ///   - Know anything about scoring or health
-    ///   - Handle shooting (SpaceGun does that)
+    /// Dependencies injected by VContainer via [Inject].
+    /// No manual Initialise() call needed.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
     public class ShipMovement : MonoBehaviour
     {
-        // ── serialised config ────────────────────────────────────
-
         [Header("Movement Settings")]
         [SerializeField]
         [Tooltip("How fast the ship rotates in degrees per second")]
@@ -30,48 +20,48 @@ namespace RajkumarTest.Asteroid
         [SerializeField]
         [Tooltip("Force applied when thrusting")]
         private float _thrustForce = 5f;
-
+        
+        [SerializeField]
+        private SpriteRenderer _spriteRenderer;
+        
         [SerializeField]
         [Tooltip("Maximum velocity the ship can reach")]
         private float _maxVelocity = 8f;
 
-        // ── private dependencies ─────────────────────────────────
-
-        private Rigidbody2D _rigidbody;
-        private InputManager _inputManager;
+        private Rigidbody2D      _rigidbody;
+        private InputManager     _inputManager;
         private IBoundaryHandler _boundaryHandler;
-        private IHealthSystem _healthSystem;
-        // ── initialisation ───────────────────────────────────────
+        private IHealthSystem    _healthSystem;
+        private bool             _isInvincible;
+        private bool             _isActive = true;
 
-        /// <summary>
-        /// Inject dependencies after construction.
-        /// Called by GameInstaller or equivalent bootstrap class.
-        /// </summary>
-        public void Initialise(
+        // ── VContainer injection ─────────────────────────────────
+
+        [Inject]
+        public void Construct(
             InputManager inputManager,
             IBoundaryHandler boundaryHandler,
-            IHealthSystem healthSystem)     // ← add
+            IHealthSystem healthSystem)
         {
             _inputManager    = inputManager;
             _boundaryHandler = boundaryHandler;
             _healthSystem    = healthSystem;
         }
 
-       
-
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
 
-            // Remove gravity — space has no gravity
+            Debug.Assert(_rigidbody != null,
+                $"[ShipMovement] Missing Rigidbody2D " +
+                $"on {gameObject.name}");
+
             _rigidbody.gravityScale = 0f;
         }
 
-        // ── Unity lifecycle ──────────────────────────────────────
-
         private void Update()
         {
-            if (_inputManager == null) return;
+            if (_inputManager == null || !_isActive) return;
 
             HandleRotation();
             HandleThrust();
@@ -79,11 +69,34 @@ namespace RajkumarTest.Asteroid
             WrapPosition();
         }
 
-        // ── private movement methods ─────────────────────────────
+        // ── public methods ───────────────────────────────────────
+
+        public void SetActive(bool active)
+        {
+            _isActive = active;
+            enabled = active;
+        }
+
+        public void SetInvincible(bool invincible)
+        {
+            _isInvincible = invincible;
+        }
+
+        // ── collision ────────────────────────────────────────────
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (_isInvincible) return;
+
+            if (!other.TryGetComponent(out IAsteroid _)) return;
+
+            _healthSystem?.LoseLife();
+        }
+
+        // ── private movement ─────────────────────────────────────
 
         private void HandleRotation()
         {
-            // TurnDirection: -1 = left, 0 = none, 1 = right
             float rotation = -_inputManager.TurnDirection
                              * _rotationSpeed
                              * Time.deltaTime;
@@ -95,8 +108,6 @@ namespace RajkumarTest.Asteroid
         {
             if (!_inputManager.IsThrusting) return;
 
-            // Apply force in the direction the ship is facing
-            // transform.up = the ship's forward direction in 2D
             _rigidbody.AddForce(
                 transform.up * _thrustForce,
                 ForceMode2D.Force);
@@ -104,11 +115,11 @@ namespace RajkumarTest.Asteroid
 
         private void ClampVelocity()
         {
-            // Prevent ship from accelerating infinitely
             if (_rigidbody.linearVelocity.magnitude > _maxVelocity)
             {
-                _rigidbody.linearVelocity = _rigidbody.linearVelocity
-                    .normalized * _maxVelocity;
+                _rigidbody.linearVelocity =
+                    _rigidbody.linearVelocity.normalized
+                    * _maxVelocity;
             }
         }
 
@@ -117,26 +128,12 @@ namespace RajkumarTest.Asteroid
             transform.position = _boundaryHandler
                 .HandleBoundary(transform.position);
         }
-        
-        private bool _isInvincible;
-
-        public void SetActive(bool active)
+        public void StopPhysics()
         {
-            gameObject.SetActive(active);
-        }
+            if (_rigidbody == null) return;
 
-        public void SetInvincible(bool invincible)
-        {
-            _isInvincible = invincible;
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            // Ignore hits during invincibility
-            if (_isInvincible) return;
-
-            if (!other.TryGetComponent(out IAsteroid _)) return;
-            _healthSystem?.LoseLife();
+            _rigidbody.linearVelocity        = Vector2.zero;
+            _rigidbody.angularVelocity = 0f;
         }
     }
 }
