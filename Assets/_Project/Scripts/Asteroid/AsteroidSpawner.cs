@@ -145,8 +145,6 @@ namespace RajkumarTest.Asteroid
             IAsteroid asteroid = _pools[size].Get();
             if (asteroid == null)
             {
-                Debug.LogWarning(
-                    $"[AsteroidSpawner] Pool empty for {size}.");
                 return;
             }
 

@@ -51,10 +51,6 @@ namespace RajkumarTest.Asteroid
             if (handle.Status !=
                 AsyncOperationStatus.Succeeded)
             {
-                Debug.LogError(
-                    $"[AddressableAssetLoader] " +
-                    $"Failed to load: {address} " +
-                    $"Type: {typeof(T).Name}");
                 return null;
             }
 

@@ -60,13 +60,24 @@ namespace RajkumarTest.Asteroid.Core
                 throw new ArgumentNullException(nameof(parent));
             if (onCreated == null)
                 throw new ArgumentNullException(nameof(onCreated));
-
+            _prefab    = null; 
             _parent       = parent;
             _onCreated    = onCreated;
             _getComponent = getComponent ??
                             (go => go.GetComponent<T>());
 
             CollectExistingChildren();
+        }
+        public ObjectPool(IEnumerable<T> items, Action<T> onCreated = null)
+        {
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+            _prefab    = null; 
+            foreach (T item in items)
+            {
+                onCreated?.Invoke(item);
+                _available.Enqueue(item);
+            }
         }
 
         private void CollectExistingChildren()
@@ -84,13 +95,17 @@ namespace RajkumarTest.Asteroid.Core
 
         public T Get()
         {
-            if (_available.Count == 0)
-            {
-                return CreateItem();
-            }
+            if (_available.Count > 0)
+                return _available.Dequeue();
 
-            return _available.Dequeue();
+            if (_prefab == null)      
+                return null;
+
+            T newItem = CreateItem();
+            _onCreated?.Invoke(newItem);
+            return newItem;
         }
+
 
         public void Return(T item)
         {

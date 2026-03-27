@@ -58,10 +58,7 @@ namespace RajkumarTest.Asteroid.Core
             // Clear all active asteroids
             _asteroidSpawner.ClearAll();
 
-            // Reset to wave 1
-            CurrentWave = 1;
-            OnWaveStarted?.Invoke(CurrentWave);
-            SpawnCurrentWave();
+            StartGame();
         }
 
         private void CheckWaveComplete()

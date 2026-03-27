@@ -648,10 +648,6 @@ MonoBehaviour:
   _waveConfig: {fileID: 11400000, guid: 66b8ca394ca70421d834a57b5d6c11d1, type: 2}
   _hudView: {fileID: 1104283704}
   _gameOverView: {fileID: 1986860779}
-  _bulletPoolSize: 10
-  _largePoolSize: 12
-  _mediumPoolSize: 24
-  _smallPoolSize: 48
 --- !u!4 &1058049984
 Transform:
   m_ObjectHideFlags: 0
@@ -923,59 +919,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 236, y: 100}
   m_Pivot: {x: 0, y: 1}
---- !u!1 &1379531597
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1379531599}
-  - component: {fileID: 1379531598}
-  m_Layer: 0
-  m_Name: GameInstaller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1379531598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379531597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34411184e777412497c1bc0b8992a6ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RajkumarTest.Asteroid.GameInstaller
-  _keyboardInput: {fileID: 1706275669}
-  _waveConfig: {fileID: 11400000, guid: 66b8ca394ca70421d834a57b5d6c11d1, type: 2}
-  _shipMovement: {fileID: 0}
-  _spaceGun: {fileID: 0}
-  _bulletPoolSize: 10
-  _asteroidPoolSize: 10
-  _hudView: {fileID: 1104283704}
-  _gameOverView: {fileID: 1986860779}
-  _respawnSystem: {fileID: 0}
---- !u!4 &1379531599
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379531597}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.07042, y: 0.13955, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1555228645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,37 +1173,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.07042, y: 0.13955, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1873001822
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1873001823}
-  m_Layer: 0
-  m_Name: StartPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1873001823
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1873001822}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1891,10 +1803,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 711787439}
-  - {fileID: 1379531599}
   - {fileID: 1706275670}
   - {fileID: 2095127793}
-  - {fileID: 1873001823}
   - {fileID: 344333296}
   - {fileID: 1104283705}
   - {fileID: 1058049984}

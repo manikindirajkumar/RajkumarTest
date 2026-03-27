@@ -25,7 +25,7 @@ namespace RajkumarTest.Asteroid
         private SpriteRenderer _spriteRenderer;
 
         [SerializeField]
-        private ShipMovement _shipMovement;
+        private ShipController shipController;
 
         private IHealthSystem _healthSystem;
 
@@ -34,10 +34,8 @@ namespace RajkumarTest.Asteroid
         [Inject]
         public void Construct(IHealthSystem healthSystem)
         {
-            if (_shipMovement == null)
+            if (shipController == null)
             {
-                Debug.LogError("[RespawnSystem] " +
-                               "_shipMovement not assigned in prefab Inspector.");
                 return;
             }
 
@@ -71,7 +69,7 @@ namespace RajkumarTest.Asteroid
             yield return new WaitForSeconds(1f);
             transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
-            _shipMovement?.SetActive(true);
+            shipController?.SetActive(true);
 
             yield return StartCoroutine(FlashRoutine());
         }
@@ -92,14 +90,14 @@ namespace RajkumarTest.Asteroid
             if (_spriteRenderer != null)
                 _spriteRenderer.enabled = true;
 
-            _shipMovement?.SetInvincible(false);
+            shipController?.SetInvincible(false);
         }
 
         private void RemoveSpaceShipFromView()
         {
-            _shipMovement?.SetActive(false);
-            _shipMovement?.StopPhysics();
-            _shipMovement?.SetInvincible(true);
+            shipController?.SetActive(false);
+            shipController?.StopPhysics();
+            shipController?.SetInvincible(true);
             _spriteRenderer.enabled = false;
         }
     }

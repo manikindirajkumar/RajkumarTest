@@ -10,7 +10,7 @@ namespace RajkumarTest.Asteroid
     /// No manual Initialise() call needed.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
-    public class ShipMovement : MonoBehaviour
+    public class ShipController : MonoBehaviour
     {
         [Header("Movement Settings")]
         [SerializeField]
@@ -21,8 +21,6 @@ namespace RajkumarTest.Asteroid
         [Tooltip("Force applied when thrusting")]
         private float _thrustForce = 5f;
         
-        [SerializeField]
-        private SpriteRenderer _spriteRenderer;
         
         [SerializeField]
         [Tooltip("Maximum velocity the ship can reach")]

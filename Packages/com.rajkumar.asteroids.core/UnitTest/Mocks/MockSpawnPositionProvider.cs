@@ -9,7 +9,7 @@ namespace RajkumarTest.Asteroid.Tests
     /// completely ignores boundaries and Random.
     /// Makes spawn position tests fully deterministic.
     /// </summary>
-    public class MockSpawnPositionProvider : ISpawnPositionProvider
+    public class MockSpawnPositionProvider : IEdgeSpawnPositionProvider
     {
         private readonly Vector2 _fixedPosition;
 
@@ -24,8 +24,8 @@ namespace RajkumarTest.Asteroid.Tests
 
         public Vector2 GetRandomSpawnPosition(IBoundaries boundaries)
         {
-            // Intentionally ignores boundaries and Random
-            // A mock returns predictable data — nothing else
+            // No null check — mocks don't validate input
+            // They just return predictable data
             CallCount++;
             return _fixedPosition;
         }

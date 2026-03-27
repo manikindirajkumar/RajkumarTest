@@ -1,3 +1,4 @@
+// IAsteroidManager.cs in Core package
 using System;
 
 namespace RajkumarTest.Asteroid.Core

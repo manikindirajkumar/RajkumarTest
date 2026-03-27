@@ -24,10 +24,7 @@ namespace RajkumarTest.Asteroid
         [SerializeField] private int _largePoolSize    = 12;
         [SerializeField] private int _mediumPoolSize   = 24;
         [SerializeField] private int _smallPoolSize    = 48;
-
         
-        // Expose pool parents publicly
-        public static Preloader Instance { get; private set; }
 
         public Transform BulletPoolParent        { get; private set; }
         public Transform LargeAsteroidParent     { get; private set; }
@@ -47,14 +44,11 @@ namespace RajkumarTest.Asteroid
 
         private void Awake()
         {
-            if(Instance !=null)
-            {
-             
-                return;
-            }
-            // Preloader itself persists
             DontDestroyOnLoad(gameObject);
-            Instance = this;
+
+            // Register into ServiceLocator —
+            // available before GameScene builds VContainer
+            ServiceLocator.Register<Preloader>(this);
         }
         private async void Start()
         {
@@ -128,7 +122,6 @@ namespace RajkumarTest.Asteroid
 
         private Transform CreateParent(string name)
         {
-            // Children inherit DontDestroyOnLoad from parent
             GameObject parent = new GameObject(name);
             parent.transform.SetParent(this.transform);
             return parent.transform;
@@ -146,8 +139,6 @@ namespace RajkumarTest.Asteroid
 
             if (prefab == null)
             {
-                Debug.LogError(
-                    $"[Preloader] Prefab null: {address}");
                 return;
             }
 
@@ -162,17 +153,6 @@ namespace RajkumarTest.Asteroid
                 go.SetActive(false);
             }
         }
-
-        private Transform CreatePersistentParent(string name)
-        {
-            GameObject parent = new GameObject(name);
-
-            // Carry into GameScene
-            DontDestroyOnLoad(parent);
-
-            return parent.transform;
-        }
-
         private void LoadGameScene()
         {
             SceneManager.LoadScene(_gameSceneName);

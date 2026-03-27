@@ -17,10 +17,8 @@ namespace RajkumarTest.Asteroid.Tests
         public float MaxY { get; }
 
         public MockGameBoardBoundary(
-            float minX = -10f,
-            float maxX =  10f,
-            float minY =  -6f,
-            float maxY =   6f)
+            float minX, float maxX,
+            float minY, float maxY)
         {
             MinX = minX;
             MaxX = maxX;

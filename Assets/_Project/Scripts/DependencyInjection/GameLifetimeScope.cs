@@ -36,52 +36,41 @@ namespace RajkumarTest.Asteroid
             // ── Camera ───────────────────────────────────────────
             builder.RegisterInstance(_gameCamera);
 
-            // Preloader persists from LoadingScene
-            // Register it so PoolManager can access parents
-            var preloader = FindObjectOfType<Preloader>();
+            // ── Preloader — retrieved via ServiceLocator ──────────
+            var preloader = ServiceLocator.Get<Preloader>();
             builder.RegisterInstance(preloader);
+
             
             // ── Boundaries ───────────────────────────────────────
             // GameBoardBoundary receives Camera via constructor
-            builder.Register<GameBoardBoundary>(Lifetime.Singleton)
-                .As<IBoundaries>();
+            builder.Register<GameBoardBoundary>(Lifetime.Singleton).As<IBoundaries>();
 
             // BoundaryHandler receives IBoundaries via constructor
-            builder.Register<BoundaryHandler>(Lifetime.Singleton)
-                .As<IBoundaryHandler>();
+            builder.Register<BoundaryHandler>(Lifetime.Singleton).As<IBoundaryHandler>();
 
             // BoundaryDestroyer — separate interface, no conflict
-            builder.Register<BoundaryDestroyer>(Lifetime.Singleton)
-                .As<IBulletBoundaryHandler>();
+            builder.Register<BoundaryDestroyer>(Lifetime.Singleton).As<IBulletBoundaryHandler>();
 
             // ── Input ─────────────────────────────────────────────
-            builder.RegisterInstance(_keyboardInput)
-                .As<IInputProvider>();
+            builder.RegisterInstance(_keyboardInput).As<IInputProvider>();
 
             builder.Register<InputManager>(Lifetime.Singleton);
             
 
             // ── Config ────────────────────────────────────────────
-            builder.RegisterInstance(_waveConfig)
-                .As<IWaveConfig>();
+            builder.RegisterInstance(_waveConfig).As<IWaveConfig>();
 
             // ── Systems ───────────────────────────────────────────
-            builder.Register<ScoreSystem>(Lifetime.Singleton)
-                .As<IScoreSystem>();
+            builder.Register<ScoreSystem>(Lifetime.Singleton).As<IScoreSystem>();
 
-            builder.Register<HealthSystem>(Lifetime.Singleton)
-                .As<IHealthSystem>()
-                .WithParameter("initialLives", 3);
+            builder.Register<HealthSystem>(Lifetime.Singleton).As<IHealthSystem>().WithParameter("initialLives", 3);
 
             // // ── Asteroid Systems ──────────────────────────────────
-            builder.Register<AsteroidSpawner>(Lifetime.Singleton)
-                .As<IAsteroidSpawner>();
+            builder.Register<AsteroidSpawner>(Lifetime.Singleton).As<IAsteroidSpawner>();
             
-            builder.Register<AsteroidManager>(Lifetime.Singleton)
-                .As<IAsteroidManager>();
+            builder.Register<AsteroidManager>(Lifetime.Singleton).As<IAsteroidManager>();
             
-            builder.Register<GameManager>(Lifetime.Singleton)
-                .As<IGameManager>();
+            builder.Register<GameManager>(Lifetime.Singleton).As<IGameManager>();
 
             // ── Pool Manager ──────────────────────────────────────
             builder.Register<PoolManager>(Lifetime.Singleton);
