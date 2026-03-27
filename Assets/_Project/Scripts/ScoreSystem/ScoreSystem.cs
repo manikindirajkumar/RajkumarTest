@@ -1,25 +1,44 @@
 using System;
+using UnityEngine;
+using RajkumarTest.Asteroid.Core;
 
-
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
     public class ScoreSystem : IScoreSystem
     {
-         
+        private const string k_HighScoreKey = "HighScore";
+
         public int CurrentScore { get; private set; }
+        public int HighScore    { get; private set; }
+
         public event Action<int> OnScoreChanged;
-        
+
+        public ScoreSystem()
+        {
+            HighScore = PlayerPrefs.GetInt(k_HighScoreKey, 0);
+        }
+
         public void AddScore(int points)
         {
             if (points <= 0) return;
+
             CurrentScore += points;
             OnScoreChanged?.Invoke(CurrentScore);
+            TryUpdateHighScore(CurrentScore);
         }
 
-         
+        private void TryUpdateHighScore(int score)
+        {
+            if (score <= HighScore) return;
+            HighScore = score;
+        }
 
         public void Reset()
         {
+            // Save before resetting — score still valid here
+            PlayerPrefs.SetInt(k_HighScoreKey, HighScore);
+            PlayerPrefs.Save();
+
             CurrentScore = 0;
             OnScoreChanged?.Invoke(CurrentScore);
         }

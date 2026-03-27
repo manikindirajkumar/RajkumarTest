@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -52,17 +53,23 @@ namespace RajkumarTest.Asteroid
         }
         private async void Start()
         {
-            // Step 1 — load all assets into cache
             await LoadAllAssetsAsync();
-            _loadingView?.UpdateProgress(0.5f);
-
+            _loadingView?.UpdateProgress(1f);
             // Step 2 — instantiate pool objects
             InstantiatePoolObjects();
-            _loadingView?.UpdateProgress(1f);
+            // Replace Task.Delay with coroutine — safe in WebGL
+            StartCoroutine(LoadGameSceneDelayed());
+        }
 
-            // Step 3 — load game scene
-            await Task.Delay(500); // brief pause so 100% shows
+        private IEnumerator LoadGameSceneDelayed()
+        {
+            yield return new WaitForSeconds(0.5f);
             LoadGameScene();
+        }
+
+        private void LoadGameScene()
+        {
+            SceneManager.LoadScene(_gameSceneName);
         }
 
         private async Task LoadAllAssetsAsync()
@@ -152,10 +159,6 @@ namespace RajkumarTest.Asteroid
 
                 go.SetActive(false);
             }
-        }
-        private void LoadGameScene()
-        {
-            SceneManager.LoadScene(_gameSceneName);
         }
     }
 }

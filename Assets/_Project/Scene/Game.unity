@@ -1326,7 +1326,7 @@ GameObject:
   - component: {fileID: 1986860776}
   - component: {fileID: 1986860779}
   m_Layer: 5
-  m_Name: GameEnd
+  m_Name: GameEndScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1366,6 +1366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: RajkumarTest.Asteroids.Game::RajkumarTest.Asteroid.GameOverView
   _panel: {fileID: 2100900253}
   _finalScoreText: {fileID: 809843479}
+  _highScoreText: {fileID: 1555228647}
   _restartButton: {fileID: 841450606}
 --- !u!1 &1995615570
 GameObject:

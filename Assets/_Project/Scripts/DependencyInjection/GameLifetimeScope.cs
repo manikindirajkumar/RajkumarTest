@@ -61,7 +61,9 @@ namespace RajkumarTest.Asteroid
             builder.RegisterInstance(_waveConfig).As<IWaveConfig>();
 
             // ── Systems ───────────────────────────────────────────
-            builder.Register<ScoreSystem>(Lifetime.Singleton).As<IScoreSystem>();
+            int savedHighScore = PlayerPrefs.GetInt("HighScore", 0);
+            builder.Register<ScoreSystem>(Lifetime.Singleton).WithParameter("savedHighScore", savedHighScore).As<IScoreSystem>();
+             
 
             builder.Register<HealthSystem>(Lifetime.Singleton).As<IHealthSystem>().WithParameter("initialLives", 3);
 

@@ -10,6 +10,7 @@ namespace RajkumarTest.Asteroid.Core
     public interface IScoreSystem
     {
         int CurrentScore { get; }
+        int HighScore { get; }
         event Action<int> OnScoreChanged;
         void AddScore(int points);
         void Reset();

@@ -14,6 +14,7 @@ namespace RajkumarTest.Asteroid
     {
         [SerializeField] private GameObject      _panel;
         [SerializeField] private TextMeshProUGUI _finalScoreText;
+        [SerializeField] private TextMeshProUGUI _highScoreText;
         [SerializeField] private Button          _restartButton;
 
         private IGameManager _gameManager;
@@ -53,11 +54,12 @@ namespace RajkumarTest.Asteroid
                     .RemoveListener(OnRestartClicked);
         }
 
-        public void OnRestartClicked()
+        private void OnRestartClicked()
         {
             if (_panel != null)
+            {
                 _panel.SetActive(false);
-
+            }
             _gameManager?.RestartGame();
         }
 
@@ -66,11 +68,18 @@ namespace RajkumarTest.Asteroid
             if (state != GameState.GameOver) return;
 
             if (_panel != null)
-                _panel.SetActive(true);
+            {
+                _panel.SetActive(true);   
+            }
 
             if (_finalScoreText != null)
-                _finalScoreText.text =
-                    $"SCORE: {_scoreSystem.CurrentScore}";
+            {
+                _finalScoreText.text = $"SCORE: {_scoreSystem.CurrentScore}";
+            }
+            if (_highScoreText != null)
+            {
+                _highScoreText.text = $"HIGH SCORE: {_scoreSystem.HighScore}";
+            }
         }
     }
 }
