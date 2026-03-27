@@ -5,7 +5,7 @@
 
 ## How to Run
 
-1. Open the project in **Unity 2022.3 LTS**
+1. Open the project in **Unity 6000.3.11f1 LTS**
 2. Open **LoadingScene** (not GameScene directly)
 3. Press Play — the loading screen will pre-warm all pools and transition automatically
 4. Controls: **W / Up Arrow** — thrust, **A/D / Left/Right** — rotate, **Space** — shoot, **R** — restart
