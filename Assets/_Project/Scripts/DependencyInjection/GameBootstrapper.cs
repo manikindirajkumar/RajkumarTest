@@ -57,7 +57,6 @@ namespace RajkumarTest.Asteroid.Core
         public void Start()
         {
             SetupInput();
-            SetupPools();
             SetupAsteroids();
             SpawnPlayer();
             SetupUI();
@@ -71,12 +70,7 @@ namespace RajkumarTest.Asteroid.Core
             _inputManager.Subscribe(_inputProvider);
         }
 
-        private void SetupPools()
-        {
-            _poolManager.Initialise(
-                _boundaryHandler,
-                _bulletBoundary);
-        }
+         
 
         private void SetupAsteroids()
         {

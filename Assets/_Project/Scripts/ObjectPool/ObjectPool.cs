@@ -22,35 +22,7 @@ namespace RajkumarTest.Asteroid.Core
         private readonly Func<GameObject, T> _getComponent;
 
         public int AvailableCount => _available.Count;
-
-        public ObjectPool(
-            GameObject prefab,
-            int initialSize,
-            Transform parent,
-            Action<T> onCreated,
-            Func<GameObject, T> getComponent = null)
-        {
-            if (prefab      == null)
-                throw new ArgumentNullException(nameof(prefab));
-            if (initialSize <= 0)
-                throw new ArgumentException(
-                    "Pool size must be greater than zero.",
-                    nameof(initialSize));
-            if (parent      == null)
-                throw new ArgumentNullException(nameof(parent));
-            if (onCreated   == null)
-                throw new ArgumentNullException(nameof(onCreated));
-
-            _prefab       = prefab;
-            _initialSize  = initialSize;
-            _parent       = parent;
-            _onCreated    = onCreated;
-            _getComponent = getComponent ??
-                (go => go.GetComponent<T>());
-
-            Prewarm();
-        }
-
+        
         public ObjectPool(
             Transform parent,
             Action<T> onCreated,
@@ -117,17 +89,7 @@ namespace RajkumarTest.Asteroid.Core
             _available.Clear();
         }
 
-        // ── private ──────────────────────────────────────────────
-
-        private void Prewarm()
-        {
-            for (int i = 0; i < _initialSize; i++)
-            {
-                T item = CreateItem();
-                _available.Enqueue(item);
-            }
-        }
-
+        
         private T CreateItem()
         {
             GameObject go = UnityEngine.Object.Instantiate(

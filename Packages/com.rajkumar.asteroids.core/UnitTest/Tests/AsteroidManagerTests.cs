@@ -85,7 +85,7 @@ public class AsteroidManagerTests
     {
         _asteroidManager.StartGame();
         _mockSpawner.ActiveAsteroidCount = 0;
-        _mockSpawner.FireOnAsteroidDestroyed(); // advance to wave 2
+        _mockSpawner.FireOnAsteroidDestroyed(); 
 
         _asteroidManager.RestartGame();
 

@@ -7,7 +7,7 @@ public class MockAsteroidSpawner : IAsteroidSpawner
     public int  ActiveAsteroidCount { get; set; }
     public int  SpawnWaveCallCount  { get; private set; }
     public int  LastSpawnedCount    { get; private set; }
-    public bool ClearAllCalled      { get; private set; }  // ← add
+    public bool ClearAllCalled      { get; private set; }   
 
     public event Action OnAsteroidDestroyed;
 

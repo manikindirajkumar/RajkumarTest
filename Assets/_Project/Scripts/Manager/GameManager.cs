@@ -12,13 +12,11 @@ namespace RajkumarTest.Asteroid
     {
         public GameState CurrentState { get; private set; }
         public event Action<GameState> OnStateChanged;
-        public event Action OnGameRestart;          // ← new
+        public event Action OnGameRestart;          
 
         private readonly IHealthSystem _healthSystem;
         private readonly IScoreSystem  _scoreSystem;
         
-
-        // No IAsteroidSpawner needed ✅
         public GameManager(
             IHealthSystem healthSystem,
             IScoreSystem  scoreSystem)
@@ -56,7 +54,7 @@ namespace RajkumarTest.Asteroid
             _scoreSystem.Reset();
             _healthSystem.Reset();
 
-            // Fire event — AsteroidManager handles clearing
+            // Fire event — Game Restart
             OnGameRestart?.Invoke();
 
             CurrentState = GameState.Playing;

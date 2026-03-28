@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using RajkumarTest.Asteroid.Core;
-
 namespace RajkumarTest.Asteroid
 {
     /// <summary>
@@ -19,18 +18,11 @@ namespace RajkumarTest.Asteroid
 
         private IGameManager _gameManager;
         private IScoreSystem _scoreSystem;
-
         public void Initialise(
             IGameManager gameManager,
             IScoreSystem scoreSystem)
         {
-            if (gameManager == null)
-                throw new System.ArgumentNullException(
-                    nameof(gameManager));
-            if (scoreSystem == null)
-                throw new System.ArgumentNullException(
-                    nameof(scoreSystem));
-
+            
             _gameManager = gameManager;
             _scoreSystem = scoreSystem;
 

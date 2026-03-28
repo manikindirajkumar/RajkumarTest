@@ -61,16 +61,12 @@ namespace RajkumarTest.Asteroid
             builder.RegisterInstance(_waveConfig).As<IWaveConfig>();
 
             // ── Systems ───────────────────────────────────────────
-            int savedHighScore = PlayerPrefs.GetInt("HighScore", 0);
-            builder.Register<ScoreSystem>(Lifetime.Singleton).WithParameter("savedHighScore", savedHighScore).As<IScoreSystem>();
+            builder.Register<ScoreSystem>(Lifetime.Singleton).As<IScoreSystem>();
              
 
             builder.Register<HealthSystem>(Lifetime.Singleton).As<IHealthSystem>().WithParameter("initialLives", 3);
 
             // // ── Asteroid Systems ──────────────────────────────────
-            builder.Register<AsteroidSpawner>(Lifetime.Singleton).As<IAsteroidSpawner>();
-            
-            builder.Register<AsteroidManager>(Lifetime.Singleton).As<IAsteroidManager>();
             
             builder.Register<GameManager>(Lifetime.Singleton).As<IGameManager>();
 

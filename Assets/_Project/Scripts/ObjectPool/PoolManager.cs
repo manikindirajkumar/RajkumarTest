@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid
@@ -39,35 +37,21 @@ namespace RajkumarTest.Asteroid
         // ── constructor ──────────────────────────────────────────
 
         public PoolManager(
-            Preloader     preloader, 
-            IScoreSystem scoreSystem,
-            IWaveConfig  waveConfig)
-        {
-            if (scoreSystem == null)
-                throw new ArgumentNullException(nameof(scoreSystem));
-            if (waveConfig  == null)
-                throw new ArgumentNullException(nameof(waveConfig));
-
-            _scoreSystem    = scoreSystem;
-            _waveConfig     = waveConfig;
-            _preloader      = preloader;
-        }
-
-        // ── public methods ───────────────────────────────────────
-
-        /// <summary>
-        /// Initialise all pools synchronously.
-        /// Prefabs must be cached in Addressables
-        /// before calling — use LoadingScene for this.
-        /// </summary>
-        public void Initialise(
+            Preloader              preloader,
+            IScoreSystem           scoreSystem,
+            IWaveConfig            waveConfig,
             IBoundaryHandler       boundaryHandler,
             IBulletBoundaryHandler bulletBoundaryHandler)
         {
-
+            _preloader             = preloader;
+            _scoreSystem           = scoreSystem;
+            _waveConfig            = waveConfig;
             _boundaryHandler       = boundaryHandler;
             _bulletBoundaryHandler = bulletBoundaryHandler;
-
+            Initialise();
+        }
+        private void Initialise()
+        {
             SetupBulletPool();
             SetupAsteroidPools();
         }
@@ -86,8 +70,7 @@ namespace RajkumarTest.Asteroid
         {
             ObjectPool<IBullet> localPool = null;
 
-            localPool = new ObjectPool<IBullet>(
-                _preloader.BulletPoolParent,  // ← Transform, not prefab
+            localPool = new ObjectPool<IBullet>(_preloader.BulletPoolParent,  
                 bullet =>
                 {
                     if (bullet is Bullet b)
@@ -110,7 +93,7 @@ namespace RajkumarTest.Asteroid
             ObjectPool<IAsteroid> localPool = null;
 
             localPool = new ObjectPool<IAsteroid>(
-                parent,                       // ← Transform, not prefab
+                parent,                      
                 asteroid =>
                 {
                     if (asteroid is Asteroid a)
@@ -133,25 +116,10 @@ namespace RajkumarTest.Asteroid
 
     private void SetupAsteroidPools()
     {
-        SetupAsteroidPool(
-            _preloader.LargeAsteroidParent,   // ← direct ✅
-            AsteroidSize.Large,
-            out _largeAsteroidPool);
-
-        SetupAsteroidPool(
-            _preloader.MediumAsteroidParent,  // ← direct ✅
-            AsteroidSize.Medium,
-            out _mediumAsteroidPool);
-
-        SetupAsteroidPool(
-            _preloader.SmallAsteroidParent,   // ← direct ✅
-            AsteroidSize.Small,
-            out _smallAsteroidPool);
+        SetupAsteroidPool(_preloader.LargeAsteroidParent, AsteroidSize.Large, out _largeAsteroidPool);
+        SetupAsteroidPool(_preloader.MediumAsteroidParent, AsteroidSize.Medium, out _mediumAsteroidPool);
+        SetupAsteroidPool(_preloader.SmallAsteroidParent, AsteroidSize.Small, out _smallAsteroidPool);
     }
-
-        private Transform CreatePoolParent(string name)
-        {
-            return new GameObject(name).transform;
-        }
+    
     }
 }

@@ -25,14 +25,11 @@ namespace RajkumarTest.Asteroid.Core
             IGameManager gameManager)
         {
             if (asteroidSpawner == null)
-                throw new ArgumentNullException(
-                    nameof(asteroidSpawner));
+                throw new ArgumentNullException(nameof(asteroidSpawner));
             if (waveConfig == null)
-                throw new ArgumentNullException(
-                    nameof(waveConfig));
+                throw new ArgumentNullException(nameof(waveConfig));
             if (gameManager == null)
-                throw new ArgumentNullException(
-                    nameof(gameManager));
+                throw new ArgumentNullException(nameof(gameManager));
 
             _asteroidSpawner = asteroidSpawner;
             _waveConfig      = waveConfig;

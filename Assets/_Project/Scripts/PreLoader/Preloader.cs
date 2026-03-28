@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,10 +11,12 @@ using RajkumarTest.Asteroid.Core;
 namespace RajkumarTest.Asteroid
 {
     /// <summary>
-    /// Loads and instantiates all pooled objects
-    /// before GameScene starts.
-    /// Uses DontDestroyOnLoad to carry pool parents
-    /// into GameScene — no instantiation needed there.
+    /// Runs in LoadingScene before GameScene starts.
+    /// Loads all prefabs via AddressableAssetLoader,
+    /// pre-instantiates pool objects under persistent parents,
+    /// and registers itself in ServiceLocator so
+    /// GameLifetimeScope can access pool parents without
+    /// any scene searching.
     /// </summary>
     public class Preloader : MonoBehaviour
     {
@@ -31,7 +34,8 @@ namespace RajkumarTest.Asteroid
         public Transform LargeAsteroidParent     { get; private set; }
         public Transform MediumAsteroidParent    { get; private set; }
         public Transform SmallAsteroidParent     { get; private set; }
-        
+
+        private AddressableAssetLoader<GameObject> _addressableAssetLoaderForGameObjcets;
         
         private readonly List<string> _addresses =
             new List<string>
@@ -50,14 +54,20 @@ namespace RajkumarTest.Asteroid
             // Register into ServiceLocator —
             // available before GameScene builds VContainer
             ServiceLocator.Register<Preloader>(this);
+            
+            // Creating AssetLoader instance for gameobjects
+            _addressableAssetLoaderForGameObjcets = new AddressableAssetLoader<GameObject>();
         }
         private async void Start()
         {
+            // editor initialises this automatically, builds don't
+            await Addressables.InitializeAsync().Task;
             await LoadAllAssetsAsync();
+            // UI Updates
             _loadingView?.UpdateProgress(1f);
-            // Step 2 — instantiate pool objects
+            // Creating pool of objects and attached to a parent
             InstantiatePoolObjects();
-            // Replace Task.Delay with coroutine — safe in WebGL
+            // Loading next scene
             StartCoroutine(LoadGameSceneDelayed());
         }
 
@@ -90,13 +100,14 @@ namespace RajkumarTest.Asteroid
 
         private async Task<bool> LoadAssetAsync(string address)
         {
-            var handle = Addressables
-                .LoadAssetAsync<GameObject>(address);
+            var result = await _addressableAssetLoaderForGameObjcets.LoadAsync(address);
 
-            await handle.Task;
+            if (result == null)
+            {
+                return false;
+            }
 
-            return handle.Status ==
-                AsyncOperationStatus.Succeeded;
+            return true;
         }
 
         private void InstantiatePoolObjects()
@@ -140,9 +151,7 @@ namespace RajkumarTest.Asteroid
             Transform parent)
         {
             // WaitForCompletion safe — just loaded above
-            GameObject prefab = Addressables
-                .LoadAssetAsync<GameObject>(address)
-                .WaitForCompletion();
+            GameObject prefab =  _addressableAssetLoaderForGameObjcets.LoadAsync(address).Result;
 
             if (prefab == null)
             {
@@ -158,6 +167,14 @@ namespace RajkumarTest.Asteroid
                     parent);
 
                 go.SetActive(false);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_addressableAssetLoaderForGameObjcets != null)
+            {
+                _addressableAssetLoaderForGameObjcets.ReleaseAll();
             }
         }
     }

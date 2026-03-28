@@ -13,18 +13,12 @@ namespace RajkumarTest.Asteroid
     [RequireComponent(typeof(Rigidbody2D))]
     public class Asteroid : MonoBehaviour, IAsteroid
     {
-        // ── IAsteroid ────────────────────────────────────────────
-
         public bool IsActive => gameObject.activeSelf;
         public AsteroidSize Size { get; private set; }
         public event Action<IAsteroid, Vector3> OnDestroyed;
-
-        // ── private fields ───────────────────────────────────────
-
+        
         private Rigidbody2D      _rigidbody;
         private IBoundaryHandler _boundaryHandler;
-
-        // ── Unity lifecycle ──────────────────────────────────────
 
         private void Awake()
         {
@@ -37,7 +31,7 @@ namespace RajkumarTest.Asteroid
             _rigidbody.gravityScale = 0f;
         }
 
-        // ── initialisation ───────────────────────────────────────
+         
 
         public void Initialise(
             AsteroidSize size,
@@ -51,7 +45,7 @@ namespace RajkumarTest.Asteroid
             _boundaryHandler = boundaryHandler;
         }
 
-        // ── IAsteroid ────────────────────────────────────────────
+         
 
         public void Activate(
             Vector3 position,
@@ -75,8 +69,7 @@ namespace RajkumarTest.Asteroid
             // Pass position so spawner knows where to split
             OnDestroyed?.Invoke(this, position);
         }
-
-        public event Action<IAsteroid> OnReturnToPool;
+        
 
         public void DeactivateSilently()
         {
@@ -85,7 +78,7 @@ namespace RajkumarTest.Asteroid
             // No event — used for pool init and ClearAll
         }
 
-        // ── Unity lifecycle ──────────────────────────────────────
+         
 
         private void Update()
         {

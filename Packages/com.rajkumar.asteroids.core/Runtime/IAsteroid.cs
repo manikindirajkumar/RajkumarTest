@@ -43,8 +43,6 @@ namespace RajkumarTest.Asteroid.Core
         /// fires OnDestroyed and returns to pool.
         /// </summary>
         void Destroy();
-        // IAsteroid
-        event Action<IAsteroid> OnReturnToPool;
 
         void DeactivateSilently();
     }

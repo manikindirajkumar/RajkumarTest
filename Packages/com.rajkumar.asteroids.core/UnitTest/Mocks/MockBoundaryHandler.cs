@@ -3,12 +3,6 @@ using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid.Tests
 {
-    /// <summary>
-    /// Test double for IBoundaryHandler.
-    /// Returns predictable wrapped positions
-    /// without needing real screen boundaries.
-    /// Lets us test wrap behaviour in complete isolation.
-    /// </summary>
     public class MockBoundaryHandler : IBoundaryHandler
     {
         private readonly IBoundaries _boundaries;

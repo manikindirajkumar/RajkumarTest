@@ -19,36 +19,28 @@ namespace RajkumarTest.Asteroid
 
         private IScoreSystem  _scoreSystem;
         private IHealthSystem _healthSystem;
-        private IAsteroidManager  _asteriodManager;
+        private IAsteroidManager  _asteroidManager;
 
+        
         public void Initialise(
-            IScoreSystem  scoreSystem,
-            IHealthSystem healthSystem,
-            IAsteroidManager  asteriodManager)
+            IScoreSystem     scoreSystem,
+            IHealthSystem    healthSystem,
+            IAsteroidManager asteroidManager)
         {
-            if (scoreSystem  == null)
-                throw new System.ArgumentNullException(
-                    nameof(scoreSystem));
-            if (healthSystem == null)
-                throw new System.ArgumentNullException(
-                    nameof(healthSystem));
-            if (asteriodManager  == null)
-                throw new System.ArgumentNullException(
-                    nameof(asteriodManager));
+            _scoreSystem     = scoreSystem;
+            _healthSystem    = healthSystem;
+            _asteroidManager = asteroidManager;
 
-            _scoreSystem  = scoreSystem;
-            _healthSystem = healthSystem;
-            _asteriodManager  = asteriodManager;
-
-            // Subscribe to events
-            _scoreSystem.OnScoreChanged   += UpdateScore;
-            _healthSystem.OnLivesChanged  += UpdateLives;
-            _asteriodManager.OnWaveStarted    += UpdateAsteriod;
+            // subscribe to events here
+            _scoreSystem.OnScoreChanged      += UpdateScore;
+            _healthSystem.OnLivesChanged     += UpdateLives;
+            _asteroidManager.OnWaveStarted   += UpdateWave;
+        
 
             // Set initial values after StartGame() is called
             UpdateScore(_scoreSystem.CurrentScore);
             UpdateLives(_healthSystem.CurrentLives);
-            UpdateAsteriod(_asteriodManager.CurrentWave);
+            UpdateWave(_asteroidManager.CurrentWave);
         }
 
         private void OnDestroy()
@@ -57,8 +49,8 @@ namespace RajkumarTest.Asteroid
                 _scoreSystem.OnScoreChanged  -= UpdateScore;
             if (_healthSystem != null)
                 _healthSystem.OnLivesChanged -= UpdateLives;
-            if (_asteriodManager  != null)
-                _asteriodManager.OnWaveStarted   -= UpdateAsteriod;
+            if (_asteroidManager  != null)
+                _asteroidManager.OnWaveStarted   -= UpdateWave;
         }
 
         private void UpdateScore(int score)
@@ -73,7 +65,7 @@ namespace RajkumarTest.Asteroid
                 _livesText.text = $"LIVES: {lives}";
         }
 
-        private void UpdateAsteriod(int wave)
+        private void UpdateWave(int wave)
         {
             if (_waveText != null)
                 _waveText.text = $"WAVE: {wave}";
