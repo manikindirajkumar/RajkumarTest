@@ -32,15 +32,14 @@ namespace RajkumarTest.Asteroid
          
 
         [Inject]
-        public void Construct(IHealthSystem healthSystem, ShipController shipController)
+        public void Construct(IHealthSystem healthSystem)
         {
             if (shipController == null)
             {
                 Debug.LogError("[RespawnSystem] shipController not assigned in Inspector.");
                 return;
             }
-
-            this.shipController = shipController;
+            
             _healthSystem = healthSystem;
             _healthSystem.OnLivesChanged += HandleLivesChanged;
         }
