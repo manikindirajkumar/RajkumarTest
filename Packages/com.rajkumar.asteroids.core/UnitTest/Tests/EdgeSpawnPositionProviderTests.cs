@@ -2,17 +2,16 @@ using System;
 using NUnit.Framework;
 using UnityEngine;
 using RajkumarTest.Asteroid.Core;
-using RajkumarTest.Asteroid;
 
 namespace RajkumarTest.Asteroid.Tests
 {
     /// <summary>
-    /// Tests for SpawnPositionProvider.
+    /// Tests for EdgeSpawnPositionProvider.
     /// All tests run in EditMode — no scene or camera needed.
     /// </summary>
     public class EdgeSpawnPositionProviderTests
     {
-        // ── shared objects ──────────────────────────────────────
+         
         private IBoundaries _boundaries;
         private EdgeSpawnPositionProvider _provider;
 
@@ -30,7 +29,7 @@ namespace RajkumarTest.Asteroid.Tests
         }
 
 
-        // ── happy path tests ────────────────────────────────────
+         
 
          
          
@@ -74,7 +73,7 @@ namespace RajkumarTest.Asteroid.Tests
             }
         }
 
-        // ── edge case tests ─────────────────────────────────────
+ 
 
         [Test]
         public void GetRandomSpawnPosition_WithNullBoundaries_ThrowsArgumentNullException()
@@ -123,7 +122,7 @@ namespace RajkumarTest.Asteroid.Tests
             }
         }
 
-        // ── mock provider tests ─────────────────────────────────
+ 
 
         [Test]
         public void MockProvider_AlwaysReturnsFixedPosition()

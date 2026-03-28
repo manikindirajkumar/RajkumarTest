@@ -19,8 +19,6 @@ namespace RajkumarTest.Asteroid
     /// </summary>
     public class KeyboardInputProvider : MonoBehaviour, IInputProvider
     {
-        // ── IInputProvider events ────────────────────────────────
-
         public event Action OnShoot;
         public event Action OnThrustStarted;
         public event Action OnThrustStopped;
@@ -29,11 +27,8 @@ namespace RajkumarTest.Asteroid
         public event Action OnRotateStopped;
         public event Action OnRestartGame;
 
-        // ── private fields ───────────────────────────────────────
-
         private AsteroidsInputActions _inputActions;
-
-        // ── Unity lifecycle ──────────────────────────────────────
+        
 
         private void Awake()
         {
@@ -66,7 +61,7 @@ namespace RajkumarTest.Asteroid
             OnRestartGame   = null;
         }
 
-        // ── subscription ─────────────────────────────────────────
+         
 
         private void SubscribeToActions()
         {
@@ -98,7 +93,7 @@ namespace RajkumarTest.Asteroid
             _inputActions.Gameplay.Restart.performed -= OnRestartHandler;
         }
 
-        // ── handlers ─────────────────────────────────────────────
+         
 
         private void OnThrustStartedHandler(InputAction.CallbackContext ctx)
             => OnThrustStarted?.Invoke();

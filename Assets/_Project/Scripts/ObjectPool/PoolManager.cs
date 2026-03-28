@@ -14,14 +14,14 @@ namespace RajkumarTest.Asteroid
     /// </summary>
     public class PoolManager
     {
-        // ── public accessors ─────────────────────────────────────
+         
 
         public IObjectPool<IBullet>   BulletPool         => _bulletPool;
         public IObjectPool<IAsteroid> LargeAsteroidPool  => _largeAsteroidPool;
         public IObjectPool<IAsteroid> MediumAsteroidPool => _mediumAsteroidPool;
         public IObjectPool<IAsteroid> SmallAsteroidPool  => _smallAsteroidPool;
 
-        // ── private fields ───────────────────────────────────────
+         
 
         private ObjectPool<IBullet>   _bulletPool;
         private ObjectPool<IAsteroid> _largeAsteroidPool;
@@ -34,7 +34,7 @@ namespace RajkumarTest.Asteroid
         private readonly IScoreSystem  _scoreSystem;
         private readonly IWaveConfig   _waveConfig;
 
-        // ── constructor ──────────────────────────────────────────
+         
 
         public PoolManager(
             Preloader              preloader,
@@ -64,7 +64,7 @@ namespace RajkumarTest.Asteroid
             _smallAsteroidPool?.Dispose();
         }
 
-        // ── private setup ────────────────────────────────────────
+ 
 
         private void SetupBulletPool()
         {

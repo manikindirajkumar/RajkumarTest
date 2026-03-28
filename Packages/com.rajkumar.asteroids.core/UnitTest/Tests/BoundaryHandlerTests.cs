@@ -26,7 +26,7 @@ namespace RajkumarTest.Asteroid.Tests
             _handler = new MockBoundaryHandler(_boundaries);
         }
 
-        // ── no wrap needed ───────────────────────────────────────
+         
 
         [Test]
         public void HandleBoundary_InsideBounds_ReturnsSamePosition()
@@ -38,7 +38,7 @@ namespace RajkumarTest.Asteroid.Tests
             Assert.AreEqual(position, result);
         }
 
-        // ── horizontal wrapping ──────────────────────────────────
+         
 
         [Test]
         public void HandleBoundary_BeyondMaxX_WrapsToMinX()
@@ -60,7 +60,7 @@ namespace RajkumarTest.Asteroid.Tests
             Assert.AreEqual(_boundaries.MaxX, result.x);
         }
 
-        // ── vertical wrapping ────────────────────────────────────
+        
 
         [Test]
         public void HandleBoundary_BeyondMaxY_WrapsToMinY()
@@ -82,7 +82,7 @@ namespace RajkumarTest.Asteroid.Tests
             Assert.AreEqual(_boundaries.MaxY, result.y);
         }
 
-        // ── z coordinate ─────────────────────────────────────────
+
 
         [Test]
         public void HandleBoundary_ZCoordinate_IsNeverChanged()
@@ -95,7 +95,7 @@ namespace RajkumarTest.Asteroid.Tests
                 "Z should never be affected by wrapping");
         }
 
-        // ── corner wrapping ──────────────────────────────────────
+         
 
         [Test]
         public void HandleBoundary_BeyondCorner_WrapsBothAxes()
@@ -110,7 +110,7 @@ namespace RajkumarTest.Asteroid.Tests
                 "Y should wrap to MinY");
         }
 
-        // ── call count tracking ──────────────────────────────────
+ 
 
         [Test]
         public void HandleBoundary_CalledThreeTimes_CallCountIsThree()

@@ -23,7 +23,7 @@ namespace RajkumarTest.Asteroid
             Boundaries = boundaries;
         }
 
-        // ── IBoundaryHandler ─────────────────────────────────────
+         
 
         public abstract bool ShouldDeactivateAtBoundary { get; }
 

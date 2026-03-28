@@ -11,27 +11,14 @@ namespace RajkumarTest.Asteroid
         public static class Prefabs
         {
             public const string Player         = "Prefabs/Player";
-            public const string Bullet1         = "Prefabs/Bullet1";
-            public const string Bullet2         = "Prefabs/Bullet2";
-            public const string Bullet3         = "Prefabs/Bullet3";
+            public const string Bullet         = "Prefabs/Bullet1";
             public const string LargeAsteroid  = "Prefabs/LargeAsteroid";
             public const string MediumAsteroid = "Prefabs/MediumAsteroid";
             public const string SmallAsteroid  = "Prefabs/SmallAsteroid";
         }
-
-        public static class Audio
-        {
-            
-        }
-
-        public static class UI
-        {
-            
-        }
-
-        public static class VFX
-        {
-            
-        }
+        // We can potentially add other asset types here like:
+        //public static class Scenes { }
+        //public static class Textures { }
+        //public static class Audio { }
     }
 }

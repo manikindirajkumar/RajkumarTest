@@ -221,7 +221,7 @@ MonoBehaviour:
   _invincibilityDuration: 3
   _flashInterval: 0.2
   _spriteRenderer: {fileID: 5909563217262889350}
-  shipController: {fileID: 7423740550398738093}
+  shipController: {fileID: 0}
 --- !u!1 &7793014699488298297
 GameObject:
   m_ObjectHideFlags: 0

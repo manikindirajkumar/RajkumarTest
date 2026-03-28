@@ -2,6 +2,12 @@ using System;
 
 namespace RajkumarTest.Asteroid.Core
 {
+    // HealthSystem
+    /// <summary>
+    /// Tracks player lives. Fires OnPlayerDied
+    /// when lives reach zero — GameManager listens
+    /// and triggers game over state.
+    /// </summary>
     public class HealthSystem : IHealthSystem
     {
         public int  CurrentLives { get; private set; }

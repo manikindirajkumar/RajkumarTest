@@ -41,7 +41,7 @@ namespace RajkumarTest.Asteroid
             new List<string>
             {
                 AddressableKeys.Prefabs.Player,
-                AddressableKeys.Prefabs.Bullet1,
+                AddressableKeys.Prefabs.Bullet,
                 AddressableKeys.Prefabs.LargeAsteroid,
                 AddressableKeys.Prefabs.MediumAsteroid,
                 AddressableKeys.Prefabs.SmallAsteroid
@@ -118,7 +118,7 @@ namespace RajkumarTest.Asteroid
             SmallAsteroidParent  = CreateParent("[Pool] SmallAsteroids");
 
             PreInstantiate(
-                AddressableKeys.Prefabs.Bullet1,
+                AddressableKeys.Prefabs.Bullet,
                 _bulletPoolSize,
                 BulletPoolParent);
 

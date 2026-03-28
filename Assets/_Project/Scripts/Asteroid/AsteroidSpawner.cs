@@ -14,12 +14,12 @@ namespace RajkumarTest.Asteroid
     /// </summary>
     public class AsteroidSpawner : IAsteroidSpawner
     {
-        // ── IAsteroidSpawner ─────────────────────────────────────
+         
 
         public int ActiveAsteroidCount { get; private set; }
         public event Action OnAsteroidDestroyed;
 
-        // ── private fields ───────────────────────────────────────
+         
 
         private int _currentWaveNumber;
         private Action<IAsteroid> _returnToPool;
@@ -34,7 +34,7 @@ namespace RajkumarTest.Asteroid
         private readonly IBoundaries            _boundaries;
         private readonly IWaveConfig            _waveConfig;
 
-        // ── constructor ──────────────────────────────────────────
+         
 
         public AsteroidSpawner(
             IObjectPool<IAsteroid> largePool,
@@ -70,7 +70,7 @@ namespace RajkumarTest.Asteroid
             _waveConfig    = waveConfig;
         }
 
-        // ── IAsteroidSpawner ─────────────────────────────────────
+         
 
         public void SpawnWave(int count, int waveNumber)
         {
@@ -135,7 +135,7 @@ namespace RajkumarTest.Asteroid
             _returnToPool = returnCallback;
         }
 
-        // ── private ──────────────────────────────────────────────
+         
 
         private void SpawnAsteroidAt(
             AsteroidSize size,

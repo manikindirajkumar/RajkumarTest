@@ -21,16 +21,8 @@ namespace RajkumarTest.Asteroid
             IHealthSystem healthSystem,
             IScoreSystem  scoreSystem)
         {
-            if (healthSystem == null)
-                throw new ArgumentNullException(
-                    nameof(healthSystem));
-            if (scoreSystem == null)
-                throw new ArgumentNullException(
-                    nameof(scoreSystem));
-
             _healthSystem = healthSystem;
             _scoreSystem  = scoreSystem;
-            
             _healthSystem.OnPlayerDied += TriggerGameOver;
         }
 

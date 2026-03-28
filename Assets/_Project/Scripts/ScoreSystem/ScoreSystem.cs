@@ -4,6 +4,12 @@ using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid
 {
+    // ScoreSystem
+    /// <summary>
+    /// Tracks current score and persists high score
+    /// via PlayerPrefs across sessions.
+    /// Saves on Reset() — once per game, not per hit.
+    /// </summary>
     public class ScoreSystem : IScoreSystem
     {
         private const string k_HighScoreKey = "HighScore";

@@ -22,7 +22,7 @@ namespace RajkumarTest.Asteroid.Tests
             _inputManager.Unsubscribe();
         }
 
-        // ── thrust tests ─────────────────────────────────────────
+         
 
         [Test]
         public void IsThrusting_WhenThrustStartedFired_BecomesTrue()
@@ -39,7 +39,7 @@ namespace RajkumarTest.Asteroid.Tests
             Assert.IsFalse(_inputManager.IsThrusting);
         }
 
-        // ── rotation tests ────────────────────────────────────────
+         
 
         [Test]
         public void TurnDirection_WhenRotateLeftFired_IsNegativeOne()
@@ -63,7 +63,7 @@ namespace RajkumarTest.Asteroid.Tests
             Assert.AreEqual(0f, _inputManager.TurnDirection);
         }
 
-        // ── reset tests ───────────────────────────────────────────
+        
 
         [Test]
         public void Reset_AfterInput_ClearsAllState()
@@ -77,7 +77,7 @@ namespace RajkumarTest.Asteroid.Tests
             Assert.AreEqual(0f, _inputManager.TurnDirection);
         }
 
-        // ── unsubscribe test ──────────────────────────────────────
+        
 
         [Test]
         public void Unsubscribe_AfterUnsubscribe_InputEventsNoLongerAffectState()
@@ -95,7 +95,7 @@ namespace RajkumarTest.Asteroid.Tests
                 "TurnDirection should not change after Unsubscribe");
         }
 
-        // ── null guard test ───────────────────────────────────────
+         
 
         [Test]
         public void Subscribe_WithNullProvider_ThrowsArgumentNullException()

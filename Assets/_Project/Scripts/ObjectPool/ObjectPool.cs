@@ -63,7 +63,7 @@ namespace RajkumarTest.Asteroid.Core
                 _available.Enqueue(item);
             }
         }
-        // ── IObjectPool ──────────────────────────────────────────
+         
 
         public T Get()
         {

@@ -1,16 +1,16 @@
+using System;
 using UnityEngine;
 
-public class TouchInputProvider : MonoBehaviour
+namespace RajkumarTest.Asteroid.Core
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class TouchInputProvider : MonoBehaviour, IInputProvider
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public event Action OnShoot;
+        public event Action OnThrustStarted;
+        public event Action OnThrustStopped;
+        public event Action OnRotateLeft;
+        public event Action OnRotateRight;
+        public event Action OnRotateStopped;
+        public event Action OnRestartGame;
     }
 }

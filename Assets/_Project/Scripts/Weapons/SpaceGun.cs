@@ -20,15 +20,14 @@ namespace RajkumarTest.Asteroid
         private Transform _muzzlePoint;
 
         public bool CanFire => _cooldownTimer <= 0f;
-
-        private IObjectPool<IBullet> _bulletPool;
+        
         private IInputProvider       _inputProvider;
         private IGameManager         _gameManager;
-        private PoolManager _poolManager;
+        private PoolManager          _poolManager;
         private float                _cooldownTimer;
         private bool                 _isActive = true;
 
-        // ── VContainer injection ─────────────────────────────────
+         
 
         [Inject]
         public void Construct(
@@ -52,7 +51,7 @@ namespace RajkumarTest.Asteroid
                 _gameManager.OnStateChanged -= HandleStateChanged;
         }
 
-        // ── ISpaceGun ────────────────────────────────────────────
+         
 
         public void TryFire(Vector3 position, Vector3 direction)
         {
@@ -71,7 +70,7 @@ namespace RajkumarTest.Asteroid
             _isActive = active;
         }
 
-        // ── Unity lifecycle ──────────────────────────────────────
+         
 
         private void Update()
         {
@@ -79,7 +78,7 @@ namespace RajkumarTest.Asteroid
                 _cooldownTimer -= Time.deltaTime;
         }
 
-        // ── private ──────────────────────────────────────────────
+         
 
         private void HandleShoot()
         {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using RajkumarTest.Asteroid.Core;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
     [CreateAssetMenu(
         fileName = "WaveConfig",

@@ -3,13 +3,19 @@ using VContainer.Unity;
 
 namespace RajkumarTest.Asteroid.Core
 {
+    /// <summary>
+    /// Composition root — wires all game systems together.
+    /// Runs once on scene start via VContainer IStartable.
+    /// Creates AsteroidSpawner and AsteroidManager manually
+    /// after PoolManager initialises — these depend on
+    /// runtime pools that aren't available during VContainer's
+    /// registration phase.
+    /// </summary>
     public class GameBootstrapper : IStartable
     {
         private readonly InputManager              _inputManager;
         private readonly IInputProvider            _inputProvider;
         private readonly PoolManager               _poolManager;
-        private readonly IBoundaryHandler          _boundaryHandler;
-        private readonly IBulletBoundaryHandler    _bulletBoundary;
         private readonly IScoreSystem              _scoreSystem;
         private readonly IHealthSystem             _healthSystem;
         private readonly IWaveConfig               _waveConfig;
@@ -29,8 +35,6 @@ namespace RajkumarTest.Asteroid.Core
             IGameManager           gameManager,
             IInputProvider         inputProvider,
             PoolManager            poolManager,
-            IBoundaryHandler       boundaryHandler,
-            IBulletBoundaryHandler bulletBoundary,
             IScoreSystem           scoreSystem,
             IHealthSystem          healthSystem,
             IWaveConfig            waveConfig,
@@ -43,8 +47,6 @@ namespace RajkumarTest.Asteroid.Core
             _gameManager     = gameManager;
             _inputProvider   = inputProvider;
             _poolManager     = poolManager;
-            _boundaryHandler = boundaryHandler;
-            _bulletBoundary  = bulletBoundary;
             _scoreSystem     = scoreSystem;
             _healthSystem    = healthSystem;
             _waveConfig      = waveConfig;

@@ -29,16 +29,18 @@ namespace RajkumarTest.Asteroid
 
         private IHealthSystem _healthSystem;
 
-        // ── VContainer injection ─────────────────────────────────
+         
 
         [Inject]
-        public void Construct(IHealthSystem healthSystem)
+        public void Construct(IHealthSystem healthSystem, ShipController shipController)
         {
             if (shipController == null)
             {
+                Debug.LogError("[RespawnSystem] shipController not assigned in Inspector.");
                 return;
             }
 
+            this.shipController = shipController;
             _healthSystem = healthSystem;
             _healthSystem.OnLivesChanged += HandleLivesChanged;
         }
@@ -49,7 +51,7 @@ namespace RajkumarTest.Asteroid
                 _healthSystem.OnLivesChanged -= HandleLivesChanged;
         }
 
-        // ── private ──────────────────────────────────────────────
+         
 
         private void HandleLivesChanged(int lives)
         {

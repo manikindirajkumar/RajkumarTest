@@ -15,7 +15,7 @@ namespace RajkumarTest.Asteroid.Core
     /// </summary>
     public class InputManager
     {
-        // ── public state ─────────────────────────────────────────
+         
 
         /// <summary>
         /// -1 = rotating left, 0 = not rotating, 1 = rotating right
@@ -27,7 +27,7 @@ namespace RajkumarTest.Asteroid.Core
         /// </summary>
         public bool IsThrusting { get; private set; }
 
-        // ── private fields ───────────────────────────────────────
+         
 
         private IInputProvider _inputProvider;
 
@@ -39,7 +39,7 @@ namespace RajkumarTest.Asteroid.Core
         private Action _onRotateRight;
         private Action _onRotateStopped;
 
-        // ── public methods ───────────────────────────────────────
+         
 
         /// <summary>
         /// Subscribe to input events from the given provider.

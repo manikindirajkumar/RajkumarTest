@@ -16,18 +16,18 @@ namespace RajkumarTest.Asteroid
         [SerializeField] private float _speed    = 10f;
         [SerializeField] private float _lifetime = 2f;
 
-        // ── IBullet ──────────────────────────────────────────────
+         
 
         public bool IsActive => gameObject.activeSelf;
         public event Action<IBullet> OnDeactivated;
 
-        // ── private fields ───────────────────────────────────────
+         
 
         private Rigidbody2D      _rigidbody;
         private IBoundaryHandler _boundaryHandler;
         private float            _lifetimeTimer;
 
-        // ── Unity lifecycle ──────────────────────────────────────
+         
 
         private void Awake()
         {
@@ -40,7 +40,7 @@ namespace RajkumarTest.Asteroid
             _rigidbody.gravityScale = 0f;
         }
 
-        // ── initialisation ───────────────────────────────────────
+         
 
         public void Initialise(IBoundaryHandler boundaryHandler)
         {
@@ -51,7 +51,7 @@ namespace RajkumarTest.Asteroid
             _boundaryHandler = boundaryHandler;
         }
 
-        // ── IBullet ──────────────────────────────────────────────
+         
 
         public void Launch(Vector3 position, Vector3 direction)
         {
@@ -76,7 +76,7 @@ namespace RajkumarTest.Asteroid
             // No event — used during pool initialisation
         }
 
-        // ── Unity lifecycle ──────────────────────────────────────
+         
 
         private void Update()
         {

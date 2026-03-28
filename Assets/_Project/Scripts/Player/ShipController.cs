@@ -33,7 +33,7 @@ namespace RajkumarTest.Asteroid
         private bool             _isInvincible;
         private bool             _isActive = true;
 
-        // ── VContainer injection ─────────────────────────────────
+         
 
         [Inject]
         public void Construct(
@@ -67,7 +67,7 @@ namespace RajkumarTest.Asteroid
             WrapPosition();
         }
 
-        // ── public methods ───────────────────────────────────────
+         
 
         public void SetActive(bool active)
         {
@@ -80,7 +80,7 @@ namespace RajkumarTest.Asteroid
             _isInvincible = invincible;
         }
 
-        // ── collision ────────────────────────────────────────────
+         
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -91,7 +91,7 @@ namespace RajkumarTest.Asteroid
             _healthSystem?.LoseLife();
         }
 
-        // ── private movement ─────────────────────────────────────
+         
 
         private void HandleRotation()
         {
