@@ -1,8 +1,14 @@
 using System;
+using RajkumarTest.Asteroid.Core;
 using UnityEngine;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
+    /// <summary>
+    /// Stub implementation of IInputProvider for gamepad input.
+    /// Interface contract fulfilled — input mapping
+    /// planned for future implementation.
+    /// </summary>
     public class GamepadInputProvider : MonoBehaviour, IInputProvider
     {
         public event Action OnShoot;

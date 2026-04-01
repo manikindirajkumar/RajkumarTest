@@ -1,5 +1,4 @@
 using System;
-using System.Numerics;
 using RajkumarTest.Asteroid.Core;
 
 public class MockAsteroidSpawner : IAsteroidSpawner
@@ -18,14 +17,9 @@ public class MockAsteroidSpawner : IAsteroidSpawner
         ActiveAsteroidCount = count;
     }
 
-    public void SpawnSplit(AsteroidSize size, UnityEngine.Vector3 position, int waveNumber)
-    {
-      
-    }
-
     public void SpawnSplit(
         AsteroidSize size,
-        Vector3 position,
+        UnityEngine.Vector3 position,
         int waveNumber) { }
 
     public void ClearAll()

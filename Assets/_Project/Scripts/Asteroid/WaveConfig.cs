@@ -3,6 +3,12 @@ using RajkumarTest.Asteroid.Core;
 
 namespace RajkumarTest.Asteroid
 {
+    /// <summary>
+    /// ScriptableObject — designer-editable wave configuration.
+    /// Controls asteroid count, speed scaling per wave,
+    /// and score values per asteroid size.
+    /// Tweak in Inspector without touching code.
+    /// </summary>
     [CreateAssetMenu(
         fileName = "WaveConfig",
         menuName = "Asteroids/WaveConfig")]

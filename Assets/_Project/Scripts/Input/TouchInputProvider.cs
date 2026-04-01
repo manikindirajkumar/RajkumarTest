@@ -1,8 +1,14 @@
 using System;
+using RajkumarTest.Asteroid.Core;
 using UnityEngine;
 
-namespace RajkumarTest.Asteroid.Core
+namespace RajkumarTest.Asteroid
 {
+    /// <summary>
+    /// Stub implementation of IInputProvider for touch input.
+    /// Interface contract fulfilled — touch mapping
+    /// planned for future implementation.
+    /// </summary>
     public class TouchInputProvider : MonoBehaviour, IInputProvider
     {
         public event Action OnShoot;
